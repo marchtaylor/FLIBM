@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+working
+tmp
+output.txt
+inst/doc/cache
+inst/doc/tex

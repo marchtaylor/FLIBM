@@ -1,0 +1,32 @@
+Package: FLIBM
+Type: Package
+Title: Individual-based operating model for fisheries simulations
+Version: 0.1.0
+Date: 2019-03-12
+Author: Marc H. Taylor
+Maintainer: Marc H. Taylor <marc.taylor@thuenen.de>
+Depends:
+    R (>= 3.0.0),
+    FLCore,
+    FLAssess,
+    FLash,
+    ggplotFL,
+    data.table,
+    parallel
+Imports:
+    TropFishR
+Description: The FLIBM model is developed along the lines of the 
+    FLR framework (Fisheries Library for R) <http://www.flr-project.org/>, 
+    and uses FLStock objects to record the state of the simulated stock.
+    Through use of an individual-based model (IBM) allows for the generation of
+    non-age-based stock indices (e.g. based on length), which are commonly 
+    used in data-limited stock assessment approaches. Presently, 
+    individual variation is modelled for the processes of growth, 
+    through variation in growth function parameters, and mortality, 
+    through treatment of rates (natural and fishing mortality) 
+    as probabilties of dying.
+License: GPL-3
+URL: https://gitlab.com/marchtaylor/FLIBM
+Encoding: UTF-8
+LazyData: FALSE
+RoxygenNote: 6.1.0
