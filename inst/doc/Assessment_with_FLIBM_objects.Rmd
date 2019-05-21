@@ -33,6 +33,7 @@ library(FLAssess)
 library(FLBRP)
 library(spict)
 library(TropFishR)
+library(MLZ)
 ```
 
 # Introduction
@@ -250,8 +251,8 @@ lfq <- FLIBM2lfq(stk)
 pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
 with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
 
-lfq2 <- lfqModify(lfq, bin_size = 2, years = 1998:1999)
-lfq2 <- lfqRestructure(lfq2)
+lfq2 <- TropFishR::lfqModify(lfq, bin_size = 2, years = 1998:1999)
+lfq2 <- TropFishR::lfqRestructure(lfq2)
 
 lfq2 <- ELEFAN_GA(lfq2, seasonalised = FALSE, 
   low_par = list(Linf = 60, K = 0.1, ta = 0),
@@ -267,10 +268,8 @@ plot(lfq2, Fname = "rcounts")
 ## MLZ
 
 ```{r, results="hide"}
-library(MLZ)
-
 # make MLZ class
-lfq3 <- lfqModify(lfq, aggregate = "year", bin_size = 2)
+lfq3 <- TropFishR::lfqModify(lfq, aggregate = "year", bin_size = 2)
 dim(lfq3$catch); length(lfq3$midLengths); length(lfq3$dates)
 lfq3$par <- lfq2$par
 plot(lfq3, Fname = "catch")
@@ -288,7 +287,7 @@ new.dataset <- calc_ML(new.dataset)
 # new.dataset@ss
 new.dataset@vbLinf <- c(lfq3$par$Linf)
 new.dataset@vbK <- lfq3$par$K[1]
-new.dataset@vbt0 <- ta2t0(par = lfq3$par, Lrecr = 0, plot = FALSE)$t0
+new.dataset@vbt0 <- TropFishR::ta2t0(par = lfq3$par, L0 = 0, plot = FALSE)$t0
 plot(new.dataset)
 
 model1 <- ML(new.dataset, ncp = 0, figure = FALSE)
@@ -329,8 +328,9 @@ MLeffort(new.dataset, start = list(q = 0.1, M = 0.7), n_age = 6, estimate.M = FA
 **Catch Curve - constant fishing mortality (F)**
 
 ```{r}
-lfq2 <- lfqCohort(lfq = lfq2, n.per.yr = 1)
-lfq2 <- lfqRestructure(lfq2, MA = 5)
+lfq2 <- TropFishR::lfqCohort(lfq = lfq2, n.per.yr = 1, 
+  calc_dt = TRUE)
+lfq2 <- TropFishR::lfqRestructure(lfq2, MA = 5)
 
 op <- par(mar = c(4,4,2,1), ps=10)
 plot(lfq2, Fname = "rcounts",
