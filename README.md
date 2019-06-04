@@ -1,3 +1,3 @@
 # FLIBM :turtle:
 
-Individually-based model for use in management strategy evaluation of a fish stock
+Individual-based operating model for use in simulating fish stock dynamics
