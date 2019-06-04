@@ -25,13 +25,13 @@ update.inds <- function(
 
   ### dates and times
   yeardec <- as.numeric(year) + (as.numeric(season)-1)/dim(obj$stock.l@stock.n)[4]
-  date <- yeardec2date(yeardec)
+  date <- FLIBM::yeardec2date(yeardec)
   if(season == dim(obj$stock.l@stock.n)[4]){ # if last season of year
     yeardec2 <- as.numeric(year)+1
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   } else {
     yeardec2 <- as.numeric(year) + (as.numeric(season))/dim(obj$stock.l@stock.n)[4]
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   }
   tincr <- yeardec2 - yeardec
 
@@ -93,13 +93,13 @@ reproduce.inds <- function(
 
   # dates and times
   yeardec <- as.numeric(year) + (as.numeric(season)-1)/dim(obj$stock.l@stock.n)[4]
-  date <- yeardec2date(yeardec)
+  date <- FLIBM::yeardec2date(yeardec)
   if(season == dim(obj$stock.l@stock.n)[4]){ # if last season of year
     yeardec2 <- as.numeric(year)+1
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   } else {
     yeardec2 <- as.numeric(year) + (as.numeric(season))/dim(obj$stock.l@stock.n)[4]
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   }
   tincr <- yeardec2 - yeardec
 
@@ -181,13 +181,13 @@ die.inds <- function(
 
   # dates and times
   yeardec <- as.numeric(year) + (as.numeric(season)-1)/dim(obj$stock.l@stock.n)[4]
-  date <- yeardec2date(yeardec)
+  date <- FLIBM::yeardec2date(yeardec)
   if(season == dim(obj$stock.l@stock.n)[4]){ # if last season of year
     yeardec2 <- as.numeric(year)+1
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   } else {
     yeardec2 <- as.numeric(year) + (as.numeric(season))/dim(obj$stock.l@stock.n)[4]
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   }
   tincr <- yeardec2 - yeardec
 
@@ -242,13 +242,13 @@ record.inds <- function(
 
   # dates and times
   yeardec <- as.numeric(year) + (as.numeric(season)-1)/dim(obj$stock.l@stock.n)[4]
-  date <- yeardec2date(yeardec)
+  date <- FLIBM::yeardec2date(yeardec)
   if(season == ac(dim(obj$stock.l@stock.n)[4])){ # if last season of year
     yeardec2 <- as.numeric(year)+1
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   } else {
     yeardec2 <- as.numeric(year) + (as.numeric(season))/dim(obj$stock.l@stock.n)[4]
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   }
   tincr <- yeardec2 - yeardec
 
@@ -432,13 +432,13 @@ grow.inds <- function(
 
   # dates and times
   yeardec <- as.numeric(year) + (as.numeric(season)-1)/dim(obj$stock.l@stock.n)[4]
-  date <- yeardec2date(yeardec)
+  date <- FLIBM::yeardec2date(yeardec)
   if(season == dim(obj$stock.l@stock.n)[4]){ # if last season of year
     yeardec2 <- as.numeric(year)+1
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   } else {
     yeardec2 <- as.numeric(year) + (as.numeric(season))/dim(obj$stock.l@stock.n)[4]
-    date2 <- yeardec2date(yeardec2)
+    date2 <- FLIBM::yeardec2date(yeardec2)
   }
   tincr <- yeardec2 - yeardec
 
