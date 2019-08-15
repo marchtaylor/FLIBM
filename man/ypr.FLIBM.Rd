@@ -7,7 +7,7 @@
 ypr.FLIBM(obj = NULL, ssbfec = 1e+06, FMs = seq(0, 1, 0.05),
   years = dimnames(obj$stock.a)$year, parallel = TRUE,
   no_cores = detectCores() - 1, clusterType = "PSOCK",
-  outfile = "output.txt", seed = 1234)
+  outfile = "output.txt", seed = 1)
 }
 \arguments{
 \item{obj}{FLIBM object.}
@@ -32,7 +32,8 @@ be applied.}
 \item{outfile}{character. Text file name (Default: `outfile = "output.txt"`)
 which will records the progress of the permutation completions.}
 
-\item{seed}{seed value for random number reproducibility (Default: `NULL`)}
+\item{seed}{seed value for random number reproducibility (Default: 1).
+When seed = NULL, a random seed is used during each FM run.}
 }
 \value{
 data.frame
@@ -60,7 +61,7 @@ plot(SSB ~ FM, resdf, t = "o")
 plot(Catch/Recr ~ FM, resdf, t = "o")
 
 # with refptPlot
-refptPlot(resdf, ypr=TRUE, spar=0.20)
+calcRefpts(resdf, ypr=TRUE, spar=0.20)
 
 
 }

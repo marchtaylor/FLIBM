@@ -16,7 +16,8 @@
 #' @param clusterType (Default: `clusterType = "PSOCK"`)
 #' @param outfile character. Text file name (Default: `outfile = "output.txt"`)
 #'   which will records the progress of the permutation completions.
-#' @param seed seed value for random number reproducibility (Default: `NULL`)
+#' @param seed seed value for random number reproducibility (Default: 1).
+#'   When seed = NULL, a random seed is used during each FM run.
 #'
 #' @return data.frame
 #' @export
@@ -41,7 +42,7 @@
 #' plot(Catch/Recr ~ FM, resdf, t = "o")
 #'
 #' # with refptPlot
-#' refptPlot(resdf, ypr=TRUE, spar=0.20)
+#' calcRefpts(resdf, ypr=TRUE, spar=0.20)
 #'
 #'
 ypr.FLIBM <- function(
@@ -53,20 +54,28 @@ ypr.FLIBM <- function(
   no_cores = detectCores() - 1,
   clusterType = "PSOCK",
   outfile = "output.txt",
-  seed = 1234
+  seed = 1
 ){
 
   if(!0 %in% FMs){
-    stop("FMs vector must contain the value
-      zero in order to estimate virgin SSB")}
+    warning("FMs vector does not contain the value
+      zero, needed in estimating virgin SSB")}
 
-  if (!is.null(outfile)) {
+  if(!is.null(outfile)) {
     unlink(outfile)
+  }
+
+  if(is.null(seed)){
+    seed <- round(runif(n = length(FMs), min = 1, max = 1e6))
+  }
+
+  if(length(seed) < length(FMs)){
+    seed <- rep_len(x = seed, length.out = length(FMs))
   }
 
   parFun <- function(x) {
     library(FLIBM)
-    set.seed(seed)
+    set.seed(seed[x])
     obj.x <- obj
     RAN <- range(obj.x$stock.a)
     DIM <- dim(obj.x$stock.a@stock.n)
@@ -133,7 +142,7 @@ ypr.FLIBM <- function(
       sink()
     }
     return(c(unlist(list(FM = FMs[x], Catch = Ca.x, SSB = SSB.x,
-        Recr = Recr.x, seed = seed + x))))
+        Recr = Recr.x, seed = seed[x]))))
   }
 
   if (parallel) {

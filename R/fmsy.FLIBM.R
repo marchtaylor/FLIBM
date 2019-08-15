@@ -44,7 +44,7 @@ fmsy.FLIBM <- function(
   no_cores = detectCores() - 1,
   clusterType = "PSOCK",
   outfile = "output.txt",
-  seed = 1234,
+  seed = 1,
   resDir = NULL,
   cleanup = FALSE
 ){
@@ -55,9 +55,17 @@ fmsy.FLIBM <- function(
 
   if(!is.null(outfile)){unlink(outfile)} # delete old outfile
 
+  if(is.null(seed)){
+    seed <- round(runif(n = length(FMs), min = 1, max = 1e6))
+  }
+
+  if(length(seed) < length(FMs)){
+    seed <- rep_len(x = seed, length.out = length(FMs))
+  }
+
   parFun <- function(x){
     library(data.table)
-    set.seed(seed)
+    set.seed(seed[x])
 
     # make copy
     obj.x <- obj
@@ -132,7 +140,7 @@ fmsy.FLIBM <- function(
   Ca <- apply(objAllYr@catch[,yearsCompare], MARGIN = 6, FUN = sum, na.rm = TRUE)
   SSB <- apply(ssb(objAllYr[,yearsCompare]), MARGIN = 6, FUN = mean, na.rm = TRUE)
 
-  ret <- data.frame(FM = FMs, Catch = c(Ca), SSB = c(SSB), fname = unlist(res))
+  ret <- data.frame(FM = FMs, Catch = c(Ca), SSB = c(SSB), fname = unlist(res), seed = seed)
 
   if(cleanup){
     file.remove(unlist(res[1:2]))
