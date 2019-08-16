@@ -54,14 +54,14 @@ stkMed$rec$params$rmax <- 1e4
 
 system.time(
   resdf <- ypr.FLIBM(obj = stkMed, ssbfec = 1e6, parallel = TRUE,
-    FMs = seq(0,1.2,len=12), seed = 1)
+    FMs = seq(0,0.6,len=12), seed = 1)
 )
 
 plot(SSB ~ FM, resdf, t = "o")
 plot(Catch/Recr ~ FM, resdf, t = "o")
 
 # with refptPlot
-calcRefpts(resdf, ypr=TRUE, spar=0.20)
+calcRefpts(resdf, ypr=TRUE, spar=0.3)
 
 
 }

@@ -38,7 +38,8 @@ calcRefpts <- function(
 
   if(!0 %in% resdf$FM) warning("FM vector does contain the value zero,
     needed for estimating virgin biomass and SPR")
-  resdf$SPR <- resdf$SSB / resdf$SSB[which.min(resdf$FM)]
+  virginSSB <- mean(resdf$SSB[which(resdf$FM == min(resdf$FM))])
+  resdf$SPR <- resdf$SSB / virginSSB
 
   if(ypr){
     if(!"Recr" %in% names(resdf)){stop("resdf must contain variable 'Recr' for ypr = TRUE")}
