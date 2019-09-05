@@ -1,18 +1,20 @@
 #' Calculate width at recruitment (WAR) of a single cohort
 #'
-#' @description The function `war.FLIBM` sinulates a single cohort
+#' @description The function `war.FLIBM` simulates a single cohort
 #'   (i.e. spawning year) and estimates the width of the cohort length
-#'   distribution through time (width between 5 \% and 95 \% quantiles).
+#'   distribution through time (width between defined quantiles).
 #'   The width at recruitment (`$war`) is then the width of the cohort when
-#'   the 5 \% quantile surpasses the length of recruitment to the fishery
+#'   the lower quantile surpasses the length of recruitment to the fishery
 #'   (`L50`). Results provide a way of estimating the `MA` setting that should
-#'   be used within the function \code{\link[lfq.Restructure]{TropFishR}}.
+#'   be used within the function \code{\link[TropFishR]{lfqRestructure}}
+#'   of the TropFishR package.
 #'
 #' @param obj FLIBM object
 #' @param ssbfec numeric value. Single value describing constant spawning stock
 #'   biomass (or fecundity), used in determining recruitment with \code{obj$rec}
 #'   during the first year of simulation.
-#' @param FM numeric value ofmaximum fishing mortality to be applied.
+#' @param FM numeric value ofmaximum fishing mortality to be applied
+#'   (Default: `FM = 0.2`).
 #' @param years character vector. Years to use in simulation
 #'   (from \code{ dimnames(obj$stock.a@stock.n)} )
 #' @param qs numeric vector of length. Definesthe lower and upper quantiles to
@@ -22,8 +24,9 @@
 #' @param monitor logical. Should progression be printed.
 #' @param plot logical. Should summary plot be drawn.
 #'
-#' @return list. Contains a data.frame, `$df` with stats by time, `$war`, `MA`,
-#'   and `L50` estimates.
+#' @return list. Contains a summary data.frame with statistics over time
+#'   over time (`$df`), and estimates of width at recruitment (`$war`),
+#'   moving average (`MA`), and length at first capture (`L50`).
 #'
 #' @export
 #'
@@ -46,7 +49,7 @@
 war.FLIBM <- function(
   obj = NULL,
   ssbfec = 1e6,
-  FM = 0.5,
+  FM = 0.2,
   years = dimnames(obj$stock.a)$year,
   qs = c(0.05, 0.95),
   minN = 100,
