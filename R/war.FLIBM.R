@@ -148,37 +148,6 @@ war.FLIBM <- function(
   pcap <- do.call(obj$harvest$model, ARGS.x)
   L50 <- ARGS.x$length[min(which(pcap >= 0.5*(max(pcap))))]
 
-  # relN <- apply(obj$stock.l@stock.n, 2:6, FUN = function(x){
-  #   x <- replace(x, is.na(x), 0)
-  #   x/sum(x, na.rm=TRUE)})
-  #
-  # CL05 <- suppressWarnings( apply(relN, 2:6, FUN = function(x){
-  #   Ls[min(which(cumsum(x)>0.05), na.rm=TRUE)]}) )
-  # CL05 <- as.data.frame(CL05)
-  # CL05$yeardec <- date2yeardec(as.Date(paste(CL05$year, CL05$season, "01", sep="-")))
-  # CL05 <- CL05[order(CL05$yeardec),]
-  # CL05$data <- replace(CL05$data, CL05$data==Inf, NaN)
-  #
-  # CL95 <- suppressWarnings( apply(relN, 2:6, FUN = function(x){
-  #   Ls[min(which(cumsum(x)>0.95), na.rm=TRUE)]}) )
-  # CL95 <- as.data.frame(CL95)
-  # CL95$yeardec <- date2yeardec(as.Date(paste(CL95$year, CL95$season, "01", sep="-")))
-  # CL95 <- CL95[order(CL95$yeardec),]
-  # CL95$data <- replace(CL95$data, CL95$data==Inf, NaN)
-  #
-  # names(CL05)[7] <- "q05"
-  # names(CL95)[7] <- "q95"
-  #
-  # df <- merge(x = CL05, y = CL95)
-  # dim(df)
-  # df$CLwidth <- df$q95 - df$q05
-  # df <- df[order(df$yeardec),]
-  #
-  # war <- df$CLwidth[min(which(df$q05 >= L50))]
-  # MA <- war / (Ls[2]-Ls[1])
-  # if(MA%%2 == 0) MA <- MA+1
-  # if(MA < 5) MA <- 5
-
   war <- qsdf$width[min(which(qsdf$qlower >= L50))]
   MA <- war / (Ls[2]-Ls[1])
   if(MA%%2 == 0) MA <- MA+1
