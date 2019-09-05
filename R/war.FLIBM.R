@@ -152,7 +152,7 @@ war.FLIBM <- function(
   L50 <- ARGS.x$length[min(which(pcap >= 0.5*(max(pcap))))]
 
   war <- qsdf$width[min(which(qsdf$qlower >= L50))]
-  MA <- war / (Ls[2]-Ls[1])
+  MA <- round(war / (Ls[2]-Ls[1]))
   if(MA%%2 == 0) MA <- MA+1
   if(MA < 5) MA <- 5
 
