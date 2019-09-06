@@ -1,3 +1,32 @@
+### FLIBM 0.1.2
+
+---
+
+##### New features
+      - calcRefs function now calculates virgin SSB based on average of lowest 
+      FM values. This allows for additional flexibility when addressing 
+      stocasticity among similar values of maximum fishing mortality (`FM`).
+      - `war.FLIBM` function added, allowing of the estimation of the width of 
+      a given cohort's length distribution through time (i.e. width between 
+      defined quantiles). The width at recruitment (WAR) is defined as the 
+      width of the cohort's length distribution when the lower quantile 
+      surpasses the length of recruitment to the fishery (`L50`).
+
+
+<br><br>
+
+### FLIBM 0.1.1
+
+---
+
+##### New features
+      - Small changes to handling of seed values in functions dealing with 
+      reference point calculation and plotting. 
+
+
+<br><br>
+
+
 ### FLIBM 0.1.0
 
 ---
