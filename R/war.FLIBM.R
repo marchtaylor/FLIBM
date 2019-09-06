@@ -151,21 +151,35 @@ war.FLIBM <- function(
   pcap <- do.call(obj$harvest$model, ARGS.x)
   L50 <- ARGS.x$length[min(which(pcap >= 0.5*(max(pcap))))]
 
-  war <- qsdf$width[min(which(qsdf$qlower >= L50))]
-  MA <- round(war / (Ls[2]-Ls[1]))
-  if(MA%%2 == 0) MA <- MA+1
-  if(MA < 5) MA <- 5
+  # results list
+  res <- list(df = qsdf, L50 = L50)
 
-  res <- list(df = qsdf, war = war, MA = MA, L50 = L50)
+  # estimate war and MA
+  recruited <- which(qsdf$qlower >= L50)
+  if(length(recruited)>0){
+    war <- qsdf$width[min(which(qsdf$qlower >= L50))]
+    MA <- round(war / (Ls[2]-Ls[1]))
+    if(MA%%2 == 0) MA <- MA+1
+    if(MA < 5) MA <- 5
+  } else {
+    warning("'war' and 'MA' could not be estimated as the stock did not fully recruit to the fishery")
+    war = NaN
+    MA = NaN
+  }
+
+  # update results list
+  res <- c(res, list(war = war, MA = MA))
 
   if(plot){
     plot(qupper ~ yeardec, res$df, col = 1, t = "l", lty = 2, ylab = "length")
     lines(qlower ~ yeardec, res$df, col = 1, t = "l", lty = 2)
     suppressWarnings(rug(x = Ls, side = 2))
     abline(h = res$L50, col = 2)
-    hit <- min(which(res$df$qlower >= res$L50))
-    segments(x0 = res$df$yeardec[hit], x1 = res$df$yeardec[hit],
-      y0 = res$df$qlower[hit], y1 = res$df$qupper[hit], col=4, lwd=2)
+    if(!is.na(res$war)){
+      hit <- min(which(res$df$qlower >= res$L50))
+      segments(x0 = res$df$yeardec[hit], x1 = res$df$yeardec[hit],
+        y0 = res$df$qlower[hit], y1 = res$df$qupper[hit], col=4, lwd=2)
+    }
     usr <- par()$usr
     cxy <- par()$cxy
     text(x = usr[1]+cxy[1], y = usr[4]-2*cxy[2],
@@ -173,7 +187,7 @@ war.FLIBM <- function(
         c(round(res$war, 1), res$MA),
         collapse = "\n"),
        pos = 4, col = 4)
-    text(x = usr[2]-cxy[1], y = L50+cxy[2], labels = paste("L50 =", res$L50),
+    text(x = usr[2]-cxy[1], y = usr[3]+cxy[2], labels = paste("L50 =", res$L50),
        pos = 2, col = 2)
 
   }
