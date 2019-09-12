@@ -52,9 +52,9 @@ stkMed$rec$covar[] <- rlnorm(n = dim(stkMed$rec$covar)[2],
 
 
 ### Growth
-stkMed$growth$params$Linf <- 64.6
+stkMed$growth$params$popLinf <- 64.6
 stkMed$growth$params$Linf.cv <- 0.1
-stkMed$growth$params$K <- 0.21
+stkMed$growth$params$popK <- 0.21
 stkMed$growth$params$K.cv <- 0.1
 stkMed$growth$params$LWa <- 0.018
 stkMed$growth$params$LWb <- 2.895

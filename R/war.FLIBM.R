@@ -38,7 +38,8 @@
 #'
 #' ## war analysis
 #' set.seed(1111)
-#' res <- war.FLIBM(obj = stkMed, FM = 0.2, years = ac(1980:1985),
+#' res <- war.FLIBM(obj = stkMed, qs = c(0.1, 0.9),
+#'   FM = 0.2, years = ac(1980:1985),
 #'   monitor = FALSE, plot = TRUE)
 #'
 #' ## estimated values

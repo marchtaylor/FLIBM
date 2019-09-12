@@ -34,12 +34,10 @@ Spin up of inds in FLIBM object
 }
 \examples{
 stk <- create.FLIBM()
-round(sum(stk$inds[[1]][[1]][[1]]$wt * stk$inds[[1]][[1]][[1]]$mat),3)
+round(sum(stk$inds[[1]][[1]][[1]]$wt * stk$inds[[1]][[1]][[1]]$mat,
+  na.rm = TRUE),3)
 nrow(stk$inds[[1]][[1]][[1]])
 
-stk <- spinup.FLIBM(stk)
-round(sum(stk$inds[[1]][[1]][[1]]$wt * stk$inds[[1]][[1]][[1]]$mat),3)
-nrow(stk$inds[[1]][[1]][[1]])
 
 
 

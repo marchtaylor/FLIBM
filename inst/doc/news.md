@@ -1,3 +1,18 @@
+### FLIBM 0.2.0
+
+---
+
+##### New features
+      - Default `create.FLIBM` and `grow.inds` functions were changed to 
+      differentiate between population growth parameters 
+      (e.g. `popLinf`, `popK`) and individual parameters. 
+      This will save memory in the `$inds` object by not recording 
+      parameters for which there is no variation among individuals.
+
+
+<br><br>
+
+
 ### FLIBM 0.1.2
 
 ---

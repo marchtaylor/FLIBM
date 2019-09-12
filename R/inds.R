@@ -447,6 +447,10 @@ grow.inds <- function(
   args.incl <- names(inds)[names(inds) %in% names(formals(obj$growth$model))]
   # if(length(args.incl)>0){ARGS <- c(ARGS, inds[args.incl])} #DF
   if(length(args.incl)>0){ARGS <- c(ARGS, inds[, args.incl, with = FALSE])} #DT
+  args.incl <- names(obj$growth$params)[names(obj$growth$params) %in% names(formals(obj$growth$model))]
+  # if(length(args.incl)>0){ARGS <- c(ARGS, inds[args.incl])} #DF
+  if(length(args.incl)>0){ARGS <- c(ARGS, obj$growth$params[args.incl])}
+
   ARGS$t1 <- yeardec
   ARGS$t2 <- yeardec2
   L2 <- do.call(obj$growth$model, ARGS)
