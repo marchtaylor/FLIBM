@@ -162,15 +162,15 @@ create.FLIBM <- function(
     obj
   ){
     inds <- data.table( # DT
+      unit = factor(sample(units, size = n, replace = TRUE)),
+      area = factor(sample(areas, size = n, replace = TRUE)),
       age = rep(age, n),
       length = 0, wt = 0,
       mat = 0, fec = 1,
       Lmat = NaN,
       m = 0, harvest = 0,
       Fd = 0, alive = 1,
-      Linf = NaN, K = NaN,
-      ts = obj$growth$params[["ts"]],
-      C = obj$growth$params[["C"]]
+      Linf = NaN, K = NaN
     )
 
     ### express inds
@@ -190,25 +190,8 @@ create.FLIBM <- function(
 
   ### inds
   if(is.null(inds)){
-    obj$inds <- vector("list", length(units))
-    names(obj$inds) <- units
-    for(unit in seq(obj$inds)){
-      obj$inds[[unit]] <- vector("list", length(areas))
-      names(obj$inds[[unit]]) <- areas
-      for(area in seq(obj$inds[[unit]])){
-        obj$inds[[unit]][[area]] <- vector("list", length(iters))
-        names(obj$inds[[unit]][[area]]) <- iters
-      }
-    }
-    for(unit in seq(obj$inds)){
-      for(area in seq(obj$inds[[unit]])){
-        for(iter in seq(obj$inds[[unit]][[area]])){
-          obj$inds[[unit]][[area]][[iter]] <- obj$make.inds(n=1e3, obj = obj)
-        }
-      }
-    }
+    obj$inds <- obj$make.inds(n=1e3, obj = obj)
   }
-
 
   # length-at-age -----------------------------------------------------------
   length.a <- flq.a
