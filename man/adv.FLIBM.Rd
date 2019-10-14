@@ -4,8 +4,7 @@
 \alias{adv.FLIBM}
 \title{Advance FLIBM stock}
 \usage{
-adv.FLIBM(obj, years = NULL, units = NULL, seasons = NULL,
-  areas = NULL, iters = NULL, monitor = TRUE)
+adv.FLIBM(obj, years = NULL, seasons = NULL, monitor = TRUE)
 }
 \arguments{
 \item{obj}{object of class FLIBM}
@@ -13,18 +12,9 @@ adv.FLIBM(obj, years = NULL, units = NULL, seasons = NULL,
 \item{years}{character vector. years to cycle for advancement.
 Defaults to full length of dimension. Vector should follow chronological order.}
 
-\item{units}{character vector. units to cycle for advancement,
-Defaults to full length of dimension.}
-
 \item{seasons}{character vector. seasons to cycle for advancement.
 Defaults to full length of dimension. Vector should follow chronological order.
 If shorter than a full year, then the year argument should be for a single year.}
-
-\item{areas}{character vector. areas to cycle for advancement.
-Defaults to full length of dimension.}
-
-\item{iters}{character vector. iters to cycle for advancement.
-Defaults to full length of dimension.}
 
 \item{monitor}{logical. Should progression be printed.}
 }
@@ -39,7 +29,7 @@ Advance FLIBM stock
 stk <- create.FLIBM(years=ac(2000:2009))
 stk$rec$params$season_wt[] <- c(0,0,0.25,1,0.25,0,0,0,0,0,0,0)
 dimnames(stk$stock.l@stock.n)['year']
-nrow(stk$inds[[1]][[1]][[1]])
+nrow(stk$inds)
 stk$stock.a@stock.n[,'2000',,,,]
 
 stk <- adv.FLIBM(obj = stk, years = ac(2000:2009))

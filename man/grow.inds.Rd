@@ -4,21 +4,14 @@
 \alias{grow.inds}
 \title{Grow individuals}
 \usage{
-grow.inds(obj, year = NA, unit = NA, season = NA, area = NA,
-  iter = NA)
+grow.inds(obj, year = NA, season = NA)
 }
 \arguments{
 \item{obj}{bla}
 
 \item{year}{bla}
 
-\item{unit}{bla}
-
 \item{season}{bla}
-
-\item{area}{bla}
-
-\item{iter}{bla}
 }
 \value{
 FLIBM object

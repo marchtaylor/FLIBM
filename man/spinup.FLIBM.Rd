@@ -4,8 +4,7 @@
 \alias{spinup.FLIBM}
 \title{Spin up of inds in FLIBM object}
 \usage{
-spinup.FLIBM(obj, nyearsmax = 20, nyearsslope = 5, unit = NULL,
-  area = NULL, iter = NULL, monitor = TRUE)
+spinup.FLIBM(obj, nyearsmax = 20, nyearsslope = 5, monitor = TRUE)
 }
 \arguments{
 \item{obj}{FLIBM object}
@@ -14,15 +13,6 @@ spinup.FLIBM(obj, nyearsmax = 20, nyearsslope = 5, unit = NULL,
 
 \item{nyearsslope}{numeric. Number of years for used to determin if spawning-
 stock biomass is in equilibrium (via linear model of log SSB) (Default=5).}
-
-\item{unit}{character vector. units to cycle through for spin-up.
-Defaults to full length of dimension.}
-
-\item{area}{character vector. areas to cycle through for spin-up.
-Defaults to full length of dimension.}
-
-\item{iter}{character vector. iters to cycle through for spin-up.
-Defaults to full length of dimension.}
 
 \item{monitor}{logical. Should progression be printed.}
 }
@@ -34,12 +24,12 @@ Spin up of inds in FLIBM object
 }
 \examples{
 stk <- create.FLIBM()
-round(sum(stk$inds[[1]][[1]][[1]]$wt * stk$inds[[1]][[1]][[1]]$mat),3)
-nrow(stk$inds[[1]][[1]][[1]])
+round(sum(stk$inds$wt * stk$inds$mat),3)
+nrow(stk$inds)
 
 stk <- spinup.FLIBM(stk)
-round(sum(stk$inds[[1]][[1]][[1]]$wt * stk$inds[[1]][[1]][[1]]$mat),3)
-nrow(stk$inds[[1]][[1]][[1]])
+round(sum(stk$inds$wt * stk$inds$mat, na.rm=TRUE),3)
+nrow(stk$inds)
 
 
 

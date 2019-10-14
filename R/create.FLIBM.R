@@ -113,7 +113,7 @@ create.FLIBM <- function(
     return(length + dt)
   }
   obj$growth$params <- list(
-    Linf = 80, K = 0.5, C = 0, ts = 0.5, Linf.cv = 0.05, K.cv = 0.05,
+    popLinf = 80, popK = 0.5, C = 0, ts = 0.5, Linf.cv = 0.05, K.cv = 0.05,
     LWa = 0.01/1e3, LWb = 3, Lmat = 40, Lmat_w = 6, L0 = 0, L0.cv = 0
   )
 
@@ -177,8 +177,8 @@ create.FLIBM <- function(
     # length
     inds$length <- obj$growth$params[["L0"]] * rlnorm(nrow(inds), 0, obj$growth$params[["L0.cv"]])
     # growth pars
-    inds$Linf <- obj$growth$params[["Linf"]] * rlnorm(nrow(inds), 0, obj$growth$params[["Linf.cv"]])
-    inds$K <- obj$growth$params[["K"]] * rlnorm(nrow(inds), 0, obj$growth$params[["K.cv"]])
+    inds$Linf <- obj$growth$params[["popLinf"]] * rlnorm(nrow(inds), 0, obj$growth$params[["Linf.cv"]])
+    inds$K <- obj$growth$params[["popK"]] * rlnorm(nrow(inds), 0, obj$growth$params[["K.cv"]])
     # weight
     inds$wt <- obj$growth$params[["LWa"]]*inds$length^obj$growth$params[["LWb"]]
     # maturity

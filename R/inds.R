@@ -67,10 +67,7 @@ update.inds <- function(
 #'
 #' @param obj bla
 #' @param year bla
-#' @param unit bla
 #' @param season bla
-#' @param area bla
-#' @param iter bla
 #'
 #' @return FLIBM object
 #' @export
@@ -152,10 +149,7 @@ reproduce.inds <- function(
 #'
 #' @param obj bla
 #' @param year bla
-#' @param unit bla
 #' @param season bla
-#' @param area bla
-#' @param iter bla
 #'
 #' @return FLIBM object
 #' @export
@@ -211,10 +205,7 @@ die.inds <- function(
 #'
 #' @param obj bla
 #' @param year bla
-#' @param unit bla
 #' @param season bla
-#' @param area bla
-#' @param iter bla
 #'
 #' @return FLIBM object
 #' @export
@@ -499,10 +490,7 @@ record.inds <- function(
 #'
 #' @param obj bla
 #' @param year bla
-#' @param unit bla
 #' @param season bla
-#' @param area bla
-#' @param iter bla
 #'
 #' @return FLIBM object
 #' @export
@@ -529,7 +517,7 @@ remove.inds <- function(
     inds <- inds[!is.na(alive)]
   }
 
-  obj$inds[[unit]][[area]][[iter]] <- inds
+  obj$inds <- inds
   return(obj)
 }
 
@@ -573,6 +561,10 @@ grow.inds <- function(
   args.incl <- names(inds)[names(inds) %in% names(formals(obj$growth$model))]
   # if(length(args.incl)>0){ARGS <- c(ARGS, inds[args.incl])} #DF
   if(length(args.incl)>0){ARGS <- c(ARGS, inds[, args.incl, with = FALSE])} #DT
+  args.incl <- names(obj$growth$params)[names(obj$growth$params) %in% names(formals(obj$growth$model))]
+  # if(length(args.incl)>0){ARGS <- c(ARGS, inds[args.incl])} #DF
+  if(length(args.incl)>0){ARGS <- c(ARGS, obj$growth$params[args.incl])}
+
   ARGS$t1 <- yeardec
   ARGS$t2 <- yeardec2
   L2 <- do.call(obj$growth$model, ARGS)
@@ -583,10 +575,11 @@ grow.inds <- function(
 	new.wt <- obj$growth$params$LWa*inds$length^obj$growth$params$LWb
 	inds[, wt := new.wt] #DT
 
+
 	### age
 	# inds$age <- inds$age + tincr #DF
 	inds[, age := age + tincr] #DT
 
-	obj$inds[[unit]][[area]][[iter]] <- inds
+	obj$inds <- inds
 	return(obj)
 }

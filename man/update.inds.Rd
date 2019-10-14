@@ -4,17 +4,16 @@
 \alias{update.inds}
 \title{Update variables of individuals}
 \usage{
-update.inds(obj, year = NA, unit = NA, season = NA, area = NA,
-  iter = NA)
+update.inds(obj, year = NA, season = NA)
 }
 \arguments{
 \item{obj}{bla}
 
 \item{year}{bla}
 
-\item{unit}{bla}
-
 \item{season}{bla}
+
+\item{unit}{bla}
 
 \item{area}{bla}
 
