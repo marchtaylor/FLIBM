@@ -6,6 +6,9 @@ output:
     df_print: paged
     toc: true
     toc_depth: 3
+    toc_float:
+      collapsed: true
+
 ---
 
 ```{r setup, include=FALSE}
@@ -126,7 +129,7 @@ stk <- spinup.FLIBM(obj = stk, nyearsslope = 10)
 
 Viewing the `$inds` 
 ```{r, histLFQ}
-ggplot(stk$inds[[1]][[1]][[1]], aes(x = length)) + 
+ggplot(stk$inds, aes(x = length)) + 
   theme(text = element_text(size=12)) + 
   geom_histogram(color = "black", fill = "white", 
     na.rm=TRUE)

@@ -4,21 +4,14 @@
 \alias{die.inds}
 \title{Die individuals}
 \usage{
-die.inds(obj, year = NA, unit = NA, season = NA, area = NA,
-  iter = NA)
+die.inds(obj, year = NA, season = NA)
 }
 \arguments{
 \item{obj}{bla}
 
 \item{year}{bla}
 
-\item{unit}{bla}
-
 \item{season}{bla}
-
-\item{area}{bla}
-
-\item{iter}{bla}
 }
 \value{
 FLIBM object

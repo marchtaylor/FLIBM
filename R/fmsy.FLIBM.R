@@ -20,18 +20,15 @@
 #' @examples
 #'
 #' data(stkMed)
-#' stkMed$rec$params$rmax <- 1e5
-#' resdf <- fmsy.FLIBM(stkMed, years = ac(1980:2009),
-#'   yearsCompare = ac(2000:2009), no_cores = 3,
-#'   FMs = seq(0,0.5,length.out = 12),
+#' stkMed$rec$params$rmax <- 1e2
+#' resdf <- fmsy.FLIBM(stkMed, years = ac(2000:2009),
+#'   yearsCompare = ac(2005:2009), no_cores = 3,
+#'   FMs = seq(0,1,length.out = 12),
 #'   resDir = file.path(getwd(), "tmp"),
+#'   cleanup = TRUE,
 #'   parallel = TRUE
 #' )
-#' refptPlot(resdf, ypr = FALSE, spar=0.15, ps=12)
-#'
-#' # ypr plot should fail because 'Rrecr' variable is missing
-#' # refptPlot(resdf, ypr = TRUE, spar=0.4, ps=12)
-#'
+#' calcRefpts(resdf, ypr = FALSE, spar=0.15)
 #'
 #'
 #'
@@ -79,7 +76,7 @@ fmsy.FLIBM <- function(
     # run
     obj.x <- FLIBM::adv.FLIBM(obj = obj.x, year = years, monitor = FALSE)
 
-    fname.x <- tempfile(pattern=paste0(as.character(x),"_"), fileext = ".RData", tmpdir = resDir)
+    fname.x <- tempfile(pattern=paste0(as.character(x),"_"), fileext = ".RData")
 
     save(obj.x, file = fname.x)
 

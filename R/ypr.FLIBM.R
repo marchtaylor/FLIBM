@@ -84,16 +84,16 @@ ypr.FLIBM <- function(
     obj.x$stock.a@stock.n[] <- NaN
     obj.x$stock.a@catch.n[] <- NaN
     obj.x$stock.a@harvest[] <- NaN
-    obj.x$inds[[1]][[1]][[1]] <- data.table::data.table()
+    obj.x$inds <- data.table::data.table()
     obj.x$rec$covar[] <- 0
     obj.x$rec$covar[,FLCore::ac(years[1])] <- 1
     recr.season <- seq(DIM[4])*NaN
 
     for (year in years) {
       for (season in DIMNAMES$season) {
-        unit <- DIMNAMES$unit[1]
-        area <- DIMNAMES$area[1]
-        iter <- DIMNAMES$iter[1]
+        # unit <- DIMNAMES$unit[1]
+        # area <- DIMNAMES$area[1]
+        # iter <- DIMNAMES$iter[1]
 
         if (year == years[1]) {
           yeardec <- as.numeric(year) + (as.numeric(season) -
@@ -108,9 +108,10 @@ ypr.FLIBM <- function(
           }
           tincr <- yeardec2 - yeardec
           ARGS.x <- list(yeardec = yeardec, yeardec2 = yeardec2,
-            date = date, tincr = tincr, year = year,
-            unit = unit, season = season, area = area,
-            iter = iter, ssbfec = ssbfec)
+            date = date, tincr = tincr,
+            year = year, season = season,
+            # unit = unit, area = area, iter = iter,
+            ssbfec = ssbfec)
           ARGS.x <- c(ARGS.x, obj.x$rec$params)
           args.incl <- which(names(ARGS.x) %in% names(formals(obj.x$rec$model)))
           ARGS.x <- ARGS.x[args.incl]
@@ -120,14 +121,15 @@ ypr.FLIBM <- function(
           if (n.recruits > 0) {
             newinds <- obj.x$make.inds(n = n.recruits,
               obj = obj.x)
-            obj.x$inds[[1]][[1]][[1]] <- data.table::rbindlist(list(obj.x$inds[[1]][[1]][[1]],
+            obj.x$inds <- data.table::rbindlist(list(obj.x$inds,
               newinds))
           }
         }
-        if (nrow(obj.x$inds[[1]][[1]][[1]]) > 0) {
-          obj.x <- FLIBM::adv.FLIBM(obj = obj.x, year = year,
-            season = season, unit = unit, area = area,
-            iter = iter, monitor = FALSE)
+        if (nrow(obj.x$inds) > 0) {
+          obj.x <- FLIBM::adv.FLIBM(obj = obj.x,
+            year = year, season = season,
+            # unit = unit, area = area, iter = iter,
+            monitor = FALSE)
         }
       }
     }

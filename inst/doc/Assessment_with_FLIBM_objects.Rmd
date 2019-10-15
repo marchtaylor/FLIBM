@@ -6,6 +6,9 @@ output:
     df_print: paged
     toc: true
     toc_depth: 3
+    toc_float:
+      collapsed: true
+
 ---
 
 ```{r setup, include=FALSE}
@@ -313,12 +316,12 @@ breaks <- c(-Inf,
 Zs <- model3@estimates[seq(model3@n.changepoint+1),1]
 pred$Z <- Zs[cut(pred$Year, breaks = breaks)]
 
-plot(yrs, FMs+0.7, t = "o", ylim = c(0,2))
+plot(yrs, FMs+0.7, t = "o", ylim = c(0,max(c(pred$Z, FMs+0.7))))
 lines(Z ~ Year, pred, t="o", col=2)
 legend("topleft", legend = c("True", "MLZ est."), col=1:2, pch=1, lty = 1)
 
 # Mean length with effort mortality estimator (not working yet)
-MLeffort(new.dataset, start = list(q = 0.1, M = 0.7), n_age = 6, estimate.M = FALSE)
+# MLeffort(new.dataset, start = list(q = 0.1, M = 0.7), n_age = 6, estimate.M = FALSE)
 
 ```
 

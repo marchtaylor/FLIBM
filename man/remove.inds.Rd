@@ -4,21 +4,17 @@
 \alias{remove.inds}
 \title{Remove dead individuals}
 \usage{
-remove.inds(obj, year = NA, unit = NA, season = NA, area = NA,
-  iter = NA)
+remove.inds(obj, year = NA, season = NA, purgeProb = 0.05)
 }
 \arguments{
 \item{obj}{bla}
 
 \item{year}{bla}
 
-\item{unit}{bla}
-
 \item{season}{bla}
 
-\item{area}{bla}
-
-\item{iter}{bla}
+\item{purgeProb}{probability of purging empty inds during time step
+(between 0 and 1)}
 }
 \value{
 FLIBM object

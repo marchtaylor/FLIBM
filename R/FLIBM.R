@@ -11,7 +11,7 @@
 #' @examples
 #' data(stk1)
 #' dimnames(stk1$stock.a)$year
-#' stk1 <- window.FLIBM(stk1, nyears = 3)
+#' stk1 <- window.FLIBM(stk1, start = 2007, end = 2009)
 #' plot(stk1$stock.a@stock.n)
 #'
 #'
