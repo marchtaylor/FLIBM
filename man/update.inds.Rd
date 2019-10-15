@@ -12,12 +12,6 @@ update.inds(obj, year = NA, season = NA)
 \item{year}{bla}
 
 \item{season}{bla}
-
-\item{unit}{bla}
-
-\item{area}{bla}
-
-\item{iter}{bla}
 }
 \value{
 FLIBM object

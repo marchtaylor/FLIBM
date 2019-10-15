@@ -20,11 +20,12 @@
 #' @examples
 #'
 #' data(stkMed)
-#' stkMed$rec$params$rmax <- 1e4
-#' resdf <- fmsy.FLIBM(stkMed, years = ac(1980:1985),
-#'   yearsCompare = ac(1980:1985), no_cores = 3,
-#'   FMs = seq(0,0.5,length.out = 12),
+#' stkMed$rec$params$rmax <- 1e2
+#' resdf <- fmsy.FLIBM(stkMed, years = ac(2000:2009),
+#'   yearsCompare = ac(2005:2009), no_cores = 3,
+#'   FMs = seq(0,1,length.out = 12),
 #'   resDir = file.path(getwd(), "tmp"),
+#'   cleanup = TRUE,
 #'   parallel = TRUE
 #' )
 #' calcRefpts(resdf, ypr = FALSE, spar=0.15)
@@ -75,7 +76,7 @@ fmsy.FLIBM <- function(
     # run
     obj.x <- FLIBM::adv.FLIBM(obj = obj.x, year = years, monitor = FALSE)
 
-    fname.x <- tempfile(pattern=paste0(as.character(x),"_"), fileext = ".RData", tmpdir = resDir)
+    fname.x <- tempfile(pattern=paste0(as.character(x),"_"), fileext = ".RData")
 
     save(obj.x, file = fname.x)
 

@@ -2,10 +2,7 @@
 #'
 #' @param obj bla
 #' @param year bla
-#' @param unit bla
 #' @param season bla
-#' @param area bla
-#' @param iter bla
 #'
 #' @return FLIBM object
 #' @export
@@ -37,8 +34,6 @@ update.inds <- function(
   args.incl <- which(names(obj$m$params) %in% names(formals(obj$m$model)))
   if(length(args.incl)>0){ARGS <- c(ARGS, obj$m$params[args.incl])}
   args.incl <- names(inds)[names(inds) %in% names(formals(obj$m$model))]
-  # if(length(args.incl)>0){ARGS <- c(ARGS, inds[args.incl])} # DF
-  # inds$m <- do.call(obj$m$model, ARGS) # DF
   if(length(args.incl)>0){ARGS <- c(ARGS, inds[, args.incl, with = FALSE])} #DT
   inds[, m := do.call(obj$m$model, ARGS)] #DT
 
@@ -47,13 +42,10 @@ update.inds <- function(
   args.incl <- which(names(obj$harvest$params) %in% names(formals(obj$harvest$model)))
   if(length(args.incl)>0){ARGS <- c(ARGS, obj$harvest$params[args.incl])}
   args.incl <- names(inds)[names(inds) %in% names(formals(obj$harvest$model))]
-  # if(length(args.incl)>0){ARGS <- c(ARGS, inds[args.incl])} #DF
-  # inds$harvest <- do.call(obj$harvest$model, ARGS) #DF
   if(length(args.incl)>0){ARGS <- c(ARGS, inds[, args.incl, with = FALSE])} #DT
   inds[, harvest := do.call(obj$harvest$model, ARGS)] #DT
 
   ### update mat
-  # inds$mat <- ifelse((inds$length > inds$Lmat | inds$mat == 1), 1, 0) #DF
   new.mat <- ifelse((inds$length > inds$Lmat | inds$mat == 1), 1, 0) #DT
   inds[,mat := new.mat] #DT
 
@@ -124,11 +116,8 @@ reproduce.inds <- function(
     NAs <- which(is.na(inds$age)) # empty rows
     if(length(NAs) < n.recruits.now){ # if empty rows needed for new recruits, add
       addl <- n.recruits.now - length(NAs)
-      # tmp <- as.data.frame(matrix(NA, nrow = addl*1.25, ncol=ncol(inds))) #DF
-      # names(tmp) <- names(inds) #DF
-      # inds <- rbind(inds, tmp) #DF
-
-      tmp <- inds[rep(1, addl*1.10)]*NA #DT
+      tmp <- inds[rep(1, addl*1.10)] #DT
+      tmp[] <- NA
       inds <- rbindlist(list(inds, tmp)) #DT
       NAs <- which(is.na(inds$age))
     }
@@ -178,14 +167,11 @@ die.inds <- function(
 
   # die?
   Z <- (inds$m + inds$harvest)
-  # Z <- ifelse(inds$age == 0, 0, Z) ### don't apply mortality to new recruits
 	pDeath <- 1 - exp(-Z*tincr)
 	dead <- which(runif(nrow(inds)) < pDeath)
 	# determine if death is natural or fished
 	if(length(dead) > 0){
-	  # inds$alive[dead] <- 0 #DF
 	  inds[dead, alive := 0] #DT
-	  # tmp <- cbind(inds$m[dead], inds$harvest[dead]) #DF
 	  tmp <- inds[dead,.(m,harvest)] #DT
 	  ### Fd = 1 for inds that died from fishing
 	  Fd <- apply(tmp, 1, function(x){sample(c(0,1), size=1, prob=c(x[1], x[2]) )})
@@ -255,9 +241,6 @@ record.inds <- function(
   # died through natural mortality
   inds$Md <- ifelse(inds$alive==0 & inds$Fd == 0, 1, 0)
 
-  # individuals alive at start of time step
-  # indsStart <- subset(inds, age != 0) ### new recr exemption?
-
   # individuals that were fished
   indsFd <- subset(inds, Fd==1)
 
@@ -269,7 +252,7 @@ record.inds <- function(
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
-        area=inds$area,
+        area = inds$area,
         iter = rep(dimnames(obj$stock.l@stock.n)$iter, nrow(inds))),
       FUN = sum, na.rm = TRUE, simplify = TRUE)
   # wt.l
@@ -279,7 +262,7 @@ record.inds <- function(
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
-        area=inds$area,
+        area = inds$area,
         iter = rep(dimnames(obj$stock.l@stock.n)$iter, nrow(inds))),
       FUN = mean, na.rm = TRUE, simplify = TRUE)
   # mat.l
@@ -289,7 +272,7 @@ record.inds <- function(
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
-        area=inds$area,
+        area = inds$area,
         iter = rep(dimnames(obj$stock.l@stock.n)$iter, nrow(inds))),
       FUN = mean, na.rm = TRUE, simplify = TRUE)
   # catch.l
@@ -299,7 +282,7 @@ record.inds <- function(
         year = rep(factor(year), nrow(indsFd)),
         unit = indsFd$unit,
         season = rep(factor(season), nrow(indsFd)),
-        area=indsFd$area,
+        area = indsFd$area,
         iter = rep(factor(dimnames(obj$stock.l@stock.n)$iter), nrow(indsFd))),
       FUN = sum, na.rm = TRUE, simplify = TRUE)
   # catch.wt.l
@@ -309,23 +292,18 @@ record.inds <- function(
         year = rep(factor(year), nrow(indsFd)),
         unit = indsFd$unit,
         season = rep(factor(season), nrow(indsFd)),
-        area=indsFd$area,
+        area = indsFd$area,
         iter = rep(factor(dimnames(obj$stock.l@stock.n)$iter), nrow(indsFd))),
       FUN = mean, na.rm = TRUE, simplify = TRUE)
 
   # m & harvest rates
-  # nStart <- tapply(inds$age != 0, inds$bin.l, sum, na.rm = TRUE) ###
-  # nEnd <- tapply(inds$age != 0 & inds$alive, inds$bin.l, sum, na.rm = TRUE) ###
-  # nStart <- tapply(inds$n, inds$bin.l, sum, na.rm = TRUE)
-  # nEnd <- tapply(inds$alive, inds$bin.l, sum, na.rm = TRUE)
-
   n.l.End <-
     tapply(inds$alive,
       INDEX = list(length = inds$bin.l,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
-        area=inds$area,
+        area = inds$area,
         iter = rep(dimnames(obj$stock.l@stock.n)$iter, nrow(inds))),
       FUN = sum, na.rm = TRUE, simplify = TRUE)
 
@@ -335,7 +313,7 @@ record.inds <- function(
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
-        area=inds$area,
+        area = inds$area,
         iter = rep(dimnames(obj$stock.l@stock.n)$iter, nrow(inds))),
       FUN = sum, na.rm = TRUE, simplify = TRUE)
 
@@ -345,32 +323,24 @@ record.inds <- function(
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
-        area=inds$area,
+        area = inds$area,
         iter = rep(dimnames(obj$stock.l@stock.n)$iter, nrow(inds))),
       FUN = sum, na.rm = TRUE, simplify = TRUE)
 
-  # nMd <- tapply(inds$Md, inds$bin.l, sum, na.rm = TRUE)
-  # nFd <- tapply(inds$Fd, inds$bin.l, sum, na.rm = TRUE)
-
-  Z <- log( n.l.End / obj$stock.l@stock.n[,year,,season,,] ) * -1
-  obj$stock.l@m[,year,,season,,] <- Z * ( n.l.Md / (n.l.Md + n.l.Fd) )
-  obj$stock.l@harvest[,year,,season,,] <- Z * (n.l.Fd/(n.l.Md+n.l.Fd))
+  Z.l <- log( n.l.End / obj$stock.l@stock.n[,year,,season,,] ) * -1
+  obj$stock.l@m[,year,,season,,] <- Z.l*(n.l.Md/(n.l.Md+n.l.Fd) )
+  obj$stock.l@harvest[,year,,season,,] <- Z.l*(n.l.Fd/(n.l.Md+n.l.Fd))
 
   # age-at-length
-  # obj$age.l[,year,unit,season,area,iter] <-
-    # tapply(indsStart$age, indsStart$bin.l, mean, na.rm = TRUE) ###
-    # tapply(inds$age, inds$bin.l, mean, na.rm = TRUE)
   obj$age.l[,year,,season,,] <-
     tapply(inds$age,
       INDEX = list(length = inds$bin.l,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
-        area=inds$area,
+        area = inds$area,
         iter = rep(dimnames(obj$stock.l@stock.n)$iter, nrow(inds))),
       FUN = mean, na.rm = TRUE, simplify = TRUE)
-
-
 
 
   ### age ###
@@ -391,7 +361,7 @@ record.inds <- function(
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
-        area=inds$area,
+        area = inds$area,
         iter = rep(dimnames(obj$stock.a@stock.n)$iter, nrow(inds))),
       FUN = mean, na.rm = TRUE, simplify = TRUE)
   # mat.a
@@ -426,11 +396,6 @@ record.inds <- function(
       FUN = mean, na.rm = TRUE, simplify = TRUE)
 
   # m & harvest rates
-  # nStart <- tapply(inds$age != 0, inds$bin.l, sum, na.rm = TRUE) ###
-  # nEnd <- tapply(inds$age != 0 & inds$alive, inds$bin.l, sum, na.rm = TRUE) ###
-  # nStart <- tapply(inds$n, inds$bin.l, sum, na.rm = TRUE)
-  # nEnd <- tapply(inds$alive, inds$bin.l, sum, na.rm = TRUE)
-
   n.a.End <-
     tapply(inds$alive,
       INDEX = list(length = inds$bin.a,
@@ -461,12 +426,9 @@ record.inds <- function(
         iter = rep(dimnames(obj$stock.a@stock.n)$iter, nrow(inds))),
       FUN = sum, na.rm = TRUE, simplify = TRUE)
 
-  # nMd <- tapply(inds$Md, inds$bin.l, sum, na.rm = TRUE)
-  # nFd <- tapply(inds$Fd, inds$bin.l, sum, na.rm = TRUE)
-
-  Z <- log( n.a.End / obj$stock.a@stock.n[,year,,season,,] ) * -1
-  obj$stock.a@m[,year,,season,,] <- Z * ( n.a.Md / (n.a.Md + n.a.Fd) )
-  obj$stock.a@harvest[,year,,season,,] <- Z * (n.a.Fd/(n.a.Md+n.a.Fd))
+  Z.a <- log( n.a.End / obj$stock.a@stock.n[,year,,season,,] ) * -1
+  obj$stock.a@m[,year,,season,,] <- Z.a*(n.a.Md/(n.a.Md+n.a.Fd))
+  obj$stock.a@harvest[,year,,season,,] <- Z.a*(n.a.Fd/(n.a.Md+n.a.Fd))
 
   # length-at-age
   obj$length.a[,year,,season,,] <-
@@ -491,6 +453,8 @@ record.inds <- function(
 #' @param obj bla
 #' @param year bla
 #' @param season bla
+#' @param purgeProb probability of purging empty inds during time step
+#'   (between 0 and 1)
 #'
 #' @return FLIBM object
 #' @export
@@ -498,22 +462,19 @@ record.inds <- function(
 remove.inds <- function(
   obj,
   year = NA,
-  season = NA
+  season = NA,
+  purgeProb = 0.05
 ){
   if(is.na(year) | is.na(season)){
     stop("Must specify 'year' and 'season' dimensions")
   }
   inds <- obj$inds
 
-  # dead <- which(inds$alive == 0) #DF
-  # if(length(dead)>0){ #DF
-  #   inds[dead,] <- NA #DF
-  # } #DF
   inds[alive == 0] <- NA #DT
 
   # occasionally remove empty slots (5% of time steps)
   randnum <- runif(1)
-  if(randnum < 0.05){
+  if(randnum < purgeProb){
     inds <- inds[!is.na(alive)]
   }
 
@@ -559,25 +520,19 @@ grow.inds <- function(
 	### grow
   ARGS <- list()
   args.incl <- names(inds)[names(inds) %in% names(formals(obj$growth$model))]
-  # if(length(args.incl)>0){ARGS <- c(ARGS, inds[args.incl])} #DF
   if(length(args.incl)>0){ARGS <- c(ARGS, inds[, args.incl, with = FALSE])} #DT
   args.incl <- names(obj$growth$params)[names(obj$growth$params) %in% names(formals(obj$growth$model))]
-  # if(length(args.incl)>0){ARGS <- c(ARGS, inds[args.incl])} #DF
   if(length(args.incl)>0){ARGS <- c(ARGS, obj$growth$params[args.incl])}
 
   ARGS$t1 <- yeardec
   ARGS$t2 <- yeardec2
   L2 <- do.call(obj$growth$model, ARGS)
   # update length and weight
-	# inds$length <- L2 # DF
 	inds[, length := L2] # DT
-	# inds$wt <- obj$growth$params$LWa*inds$length^obj$growth$params$LWb #DF
 	new.wt <- obj$growth$params$LWa*inds$length^obj$growth$params$LWb
 	inds[, wt := new.wt] #DT
 
-
 	### age
-	# inds$age <- inds$age + tincr #DF
 	inds[, age := age + tincr] #DT
 
 	obj$inds <- inds

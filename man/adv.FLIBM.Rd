@@ -4,7 +4,8 @@
 \alias{adv.FLIBM}
 \title{Advance FLIBM stock}
 \usage{
-adv.FLIBM(obj, years = NULL, seasons = NULL, monitor = TRUE)
+adv.FLIBM(obj, years = NULL, seasons = NULL, monitor = TRUE,
+  purgeProb = 0.05)
 }
 \arguments{
 \item{obj}{object of class FLIBM}
@@ -17,6 +18,9 @@ Defaults to full length of dimension. Vector should follow chronological order.
 If shorter than a full year, then the year argument should be for a single year.}
 
 \item{monitor}{logical. Should progression be printed.}
+
+\item{purgeProb}{probability of purging empty inds during time step
+(between 0 and 1)}
 }
 \value{
 FLIBM object
@@ -32,6 +36,7 @@ dimnames(stk$stock.l@stock.n)['year']
 nrow(stk$inds)
 stk$stock.a@stock.n[,'2000',,,,]
 
+set.seed(1)
 stk <- adv.FLIBM(obj = stk, years = ac(2000:2009))
 plot(stk$stock.a@stock.n)
 
@@ -46,7 +51,7 @@ with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
 
 
 # numbers by age at start of the year
-stk$stock.a@range[c("minfbar", "maxfbar")] <- c(1,4)
+stk$stock.a@range[c("minfbar", "maxfbar")] <- c(2,4)
 stk.yr <- simplifySeason(stk)
 stk.yr <- stk.yr[2:dim(stk.yr)[1],]
 plot(stk.yr)

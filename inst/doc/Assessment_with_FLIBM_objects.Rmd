@@ -6,6 +6,9 @@ output:
     df_print: paged
     toc: true
     toc_depth: 3
+    toc_float:
+      collapsed: true
+
 ---
 
 ```{r setup, include=FALSE}

@@ -7,6 +7,8 @@
 #'   Defaults to full length of dimension. Vector should follow chronological order.
 #'   If shorter than a full year, then the year argument should be for a single year.
 #' @param monitor logical. Should progression be printed.
+#' @param purgeProb probability of purging empty inds during time step
+#'   (between 0 and 1)
 #'
 #' @return  FLIBM object
 #'
@@ -21,6 +23,7 @@
 #' nrow(stk$inds)
 #' stk$stock.a@stock.n[,'2000',,,,]
 #'
+#' set.seed(1)
 #' stk <- adv.FLIBM(obj = stk, years = ac(2000:2009))
 #' plot(stk$stock.a@stock.n)
 #'
@@ -35,7 +38,7 @@
 #'
 #'
 #' # numbers by age at start of the year
-#' stk$stock.a@range[c("minfbar", "maxfbar")] <- c(1,4)
+#' stk$stock.a@range[c("minfbar", "maxfbar")] <- c(2,4)
 #' stk.yr <- simplifySeason(stk)
 #' stk.yr <- stk.yr[2:dim(stk.yr)[1],]
 #' plot(stk.yr)
@@ -57,7 +60,8 @@ adv.FLIBM <- function(
   obj,
   years = NULL,
   seasons = NULL,
-  monitor = TRUE
+  monitor = TRUE,
+  purgeProb = 0.05
 ){
 
   DIMNAMES <- dimnames(obj$stock.l@stock.n)
@@ -70,14 +74,14 @@ adv.FLIBM <- function(
 
   for(year in years){
     for(season in seasons){
-      # year = DIMNAMES$year[1]; season = DIMNAMES$season[1]
+      # year = DIMNAMES$year[1]; season = DIMNAMES$season[3]
       # year;season
       obj <- update.inds(obj = obj, year = year, season = season)
       obj <- reproduce.inds(obj = obj, year = year, season = season)
       obj <- update.inds(obj = obj, year = year, season = season)
       obj <- die.inds(obj = obj, year = year, season = season)
       obj <- record.inds(obj = obj, year = year, season = season)
-      obj <- remove.inds(obj = obj, year = year, season = season)
+      obj <- remove.inds(obj = obj, year = year, season = season, purgeProb = purgeProb)
       obj <- grow.inds(obj = obj, year = year, season = season)
       if(monitor){
         cat(paste("year =", year, "| season =", season),"\n")
