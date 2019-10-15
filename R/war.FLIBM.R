@@ -40,7 +40,7 @@
 #' set.seed(1111)
 #' res <- war.FLIBM(obj = stkMed, qs = c(0.1, 0.9),
 #'   FM = 0.2, years = ac(1980:1985),
-#'   monitor = FALSE, plot = TRUE)
+#'   monitor = TRUE, plot = TRUE)
 #'
 #' ## estimated values
 #' res$war # width at recruitment
@@ -71,7 +71,7 @@ war.FLIBM <- function(
   obj$stock.l@catch.n[] <- NaN
   obj$stock.l@harvest[] <- NaN
 
-  obj$inds[[1]][[1]][[1]] <- data.table::data.table()
+  obj$inds <- data.table::data.table()
   obj$rec$covar[] <- 0
   obj$rec$covar[,FLCore::ac(years[1])] <- 1
   recr.season <- seq(DIM[4])*NaN
@@ -80,9 +80,9 @@ war.FLIBM <- function(
 
   for (year in years) {
     for (season in DIMNAMES$season) {
-      unit <- DIMNAMES$unit[1]
-      area <- DIMNAMES$area[1]
-      iter <- DIMNAMES$iter[1]
+      # unit <- DIMNAMES$unit[1]
+      # area <- DIMNAMES$area[1]
+      # iter <- DIMNAMES$iter[1]
 
       if (year == years[1]) {
         yeardec <- as.numeric(year) + (as.numeric(season) -
@@ -97,9 +97,10 @@ war.FLIBM <- function(
         }
         tincr <- yeardec2 - yeardec
         ARGS.x <- list(yeardec = yeardec, yeardec2 = yeardec2,
-          date = date, tincr = tincr, year = year,
-          unit = unit, season = season, area = area,
-          iter = iter, ssbfec = ssbfec)
+          date = date, tincr = tincr,
+          year = year, season = season,
+          # unit = unit,  area = area, iter = iter,
+          ssbfec = ssbfec)
         ARGS.x <- c(ARGS.x, obj$rec$params)
         args.incl <- which(names(ARGS.x) %in% names(formals(obj$rec$model)))
         ARGS.x <- ARGS.x[args.incl]
@@ -109,18 +110,20 @@ war.FLIBM <- function(
         if (n.recruits > 0) {
           newinds <- obj$make.inds(n = n.recruits,
             obj = obj)
-          obj$inds[[1]][[1]][[1]] <- data.table::rbindlist(list(obj$inds[[1]][[1]][[1]],
+          obj$inds <- data.table::rbindlist(list(obj$inds,
             newinds))
         }
       }
-      if (nrow(obj$inds[[1]][[1]][[1]]) > 0) {
-        obj <- FLIBM::adv.FLIBM(obj = obj, year = year,
-          season = season, unit = unit, area = area,
-          iter = iter, monitor = monitor)
+      if (nrow(obj$inds) > 0) {
+        obj <- FLIBM::adv.FLIBM(obj = obj,
+          year = year,
+          season = season,
+          # unit = unit, area = area, iter = iter,
+          monitor = monitor)
 
-        qres <- quantile(obj$inds[[1]][[1]][[1]]$length, prob = qs, na.rm=TRUE)
-        qlower[, year, unit, season, area, iter] <- qres[1]
-        qupper[, year, unit, season, area, iter] <- qres[2]
+        qres <- quantile(obj$inds$length, prob = qs, na.rm=TRUE)
+        qlower[, year, 1, season, 1, 1] <- qres[1]
+        qupper[, year, 1, season, 1, 1] <- qres[2]
       }
     }
   }

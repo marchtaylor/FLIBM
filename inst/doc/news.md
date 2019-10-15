@@ -1,3 +1,21 @@
+### FLIBM 0.3.0
+
+---
+
+##### New features
+      - Major change: FLIBM object now holds inds within a single level list
+      (`obj$inds`) with `obj$inds$unit` and `obj$inds$area` as individual
+      variables. `iter` dimension is no longer used as multiple iterations
+      drastically slow down the simulation. It is now recommended that nultiple
+      iterations be done in individual objects (and multiple R instances), 
+      whose FLQuant objects can be combined later. The new fomulation will
+      more easily allow for the definition of unit and area specific funcitons 
+      (e.g. sex-specific growth, mortality etc.)
+
+
+<br><br>
+
+
 ### FLIBM 0.2.0
 
 ---

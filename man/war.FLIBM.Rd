@@ -56,7 +56,7 @@ stkMed$rec$params$rmax <- 1e4
 set.seed(1111)
 res <- war.FLIBM(obj = stkMed, qs = c(0.1, 0.9),
   FM = 0.2, years = ac(1980:1985),
-  monitor = FALSE, plot = TRUE)
+  monitor = TRUE, plot = TRUE)
 
 ## estimated values
 res$war # width at recruitment
