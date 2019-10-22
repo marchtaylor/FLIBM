@@ -1,7 +1,7 @@
 Package: FLIBM
 Type: Package
 Title: Individual-based operating model for fisheries simulations
-Version: 0.3.0
+Version: 0.3.1
 Date: 2019-10-15
 Author: Marc H. Taylor
 Maintainer: Marc H. Taylor <marc.taylor@thuenen.de>
