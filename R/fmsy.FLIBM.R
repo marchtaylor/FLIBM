@@ -11,8 +11,10 @@
 #' @param clusterType bla
 #' @param outfile bla
 #' @param seed bla
-#' @param resDir bla
-#' @param cleanup bla
+#' @param resDir path to intermediate objects (default = \code{tempdir()}).
+#'   Change directory if objects should be kept. Otherwise temporary directory
+#'   is used, which is automatically deleted following the R session.
+#' @param cleanup logical. Default TRUE.
 #'
 #' @return data.frame
 #' @export
@@ -23,8 +25,7 @@
 #' stkMed$rec$params$rmax <- 1e2
 #' resdf <- fmsy.FLIBM(stkMed, years = ac(2000:2009),
 #'   yearsCompare = ac(2005:2009), no_cores = 3,
-#'   FMs = seq(0,1,length.out = 12),
-#'   resDir = file.path(getwd(), "tmp"),
+#'   FMs = seq(0,1,length.out = 6),
 #'   cleanup = TRUE,
 #'   parallel = TRUE
 #' )
@@ -42,11 +43,9 @@ fmsy.FLIBM <- function(
   clusterType = "PSOCK",
   outfile = "output.txt",
   seed = 1,
-  resDir = NULL,
-  cleanup = FALSE
+  resDir = tempdir(),
+  cleanup = TRUE
 ){
-
-  if(is.null(resDir)){stop("Please provide results folder path")}
 
   if(!all(yearsCompare %in% years)) stop("all 'yearsCompare' must be in 'years'")
 
@@ -75,8 +74,8 @@ fmsy.FLIBM <- function(
 
     # run
     obj.x <- FLIBM::adv.FLIBM(obj = obj.x, year = years, monitor = FALSE)
-
-    fname.x <- tempfile(pattern=paste0(as.character(x),"_"), fileext = ".RData")
+    fname.x <- tempfile(pattern=paste0(as.character(x),"_"), tmpdir = resDir,
+      fileext = ".RData")
 
     save(obj.x, file = fname.x)
 
@@ -140,7 +139,7 @@ fmsy.FLIBM <- function(
   ret <- data.frame(FM = FMs, Catch = c(Ca), SSB = c(SSB), fname = unlist(res), seed = seed)
 
   if(cleanup){
-    file.remove(unlist(res[1:2]))
+    file.remove(as.character(ret$fname))
   }
 
   return(ret)
