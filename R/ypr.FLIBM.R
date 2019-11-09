@@ -40,6 +40,7 @@
 #'
 #' plot(SSB ~ FM, resdf, t = "o")
 #' plot(Catch/Recr ~ FM, resdf, t = "o")
+#' plot(Lopt ~ FM, resdf, t = "o")
 #'
 #' # with refptPlot
 #' calcRefpts(resdf, ypr=TRUE, spar=0.3)
@@ -84,6 +85,9 @@ ypr.FLIBM <- function(
     obj.x$stock.a@stock.n[] <- NaN
     obj.x$stock.a@catch.n[] <- NaN
     obj.x$stock.a@harvest[] <- NaN
+    obj.x$stock.l@stock.n[] <- NaN
+    obj.x$stock.l@catch.n[] <- NaN
+    obj.x$stock.l@harvest[] <- NaN
     obj.x$inds <- data.table::data.table()
     obj.x$rec$covar[] <- 0
     obj.x$rec$covar[,FLCore::ac(years[1])] <- 1
@@ -133,6 +137,20 @@ ypr.FLIBM <- function(
         }
       }
     }
+
+    # calculate Lopt
+    stock(obj.x$stock.l) <- computeStock(obj.x$stock.l)
+    # plot(stock(obj.x$stock.l)[,ac(1980:2000)])
+    maxB <- which.max(stock(obj.x$stock.l))
+    Ls <- as.numeric(dimnames(obj.x$stock.l)$length)
+    Lmids <- Ls + diff(Ls)[1]/2
+    Lmat <- obj.x$stock.l@stock.n * NaN
+    Lmat[] <- Lmids
+    Lmu <- as(apply(Lmat * stock.n(obj.x$stock.l), c(2,4), sum, na.rm=TRUE) /
+      apply(stock.n(obj.x$stock.l), c(2,4), sum, na.rm=TRUE), "FLQuant")
+    # plot(Lmu[,ac(1980:2000)])
+    Lopt <- c(Lmu)[maxB]
+
     objYr.x <- FLIBM::simplifySeason(obj.x)
     Ca.x <- sum(objYr.x@catch[, years], na.rm = TRUE)
     SSB.x <- sum(FLCore::ssb(objYr.x[, years]), na.rm = TRUE)
@@ -144,7 +162,7 @@ ypr.FLIBM <- function(
       sink()
     }
     return(c(unlist(list(FM = FMs[x], Catch = Ca.x, SSB = SSB.x,
-        Recr = Recr.x, seed = seed[x]))))
+        Recr = Recr.x, Lopt = Lopt, seed = seed[x]))))
   }
 
   if (parallel) {
