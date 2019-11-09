@@ -59,6 +59,7 @@ system.time(
 
 plot(SSB ~ FM, resdf, t = "o")
 plot(Catch/Recr ~ FM, resdf, t = "o")
+plot(Lopt ~ FM, resdf, t = "o")
 
 # with refptPlot
 calcRefpts(resdf, ypr=TRUE, spar=0.3)

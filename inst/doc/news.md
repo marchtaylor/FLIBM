@@ -1,3 +1,17 @@
+### FLIBM 0.3.1
+
+---
+
+##### New features
+      - `fmsy.FLIBM` temporary results directory (`resDir`) uses R session-
+      designated temporary directory (`tempdir()`)
+      - Length at maximum cohort biomass (*Lopt*) added to output of 
+      `ypr.FLIBM`
+
+
+<br><br>
+
+
 ### FLIBM 0.3.0
 
 ---
