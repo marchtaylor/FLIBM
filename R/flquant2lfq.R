@@ -22,11 +22,11 @@
 #' stk <- spinup.FLIBM(obj = stk, nyearsslope = 5)
 #'
 #' stk <- adv.FLIBM(stk, year = ac(2000:2002), monitor = TRUE)
-#' dim(stk$inds[[1]][[1]][[1]])
+#' dim(stk$inds)
 #' plot(simplify(stk$stock.a, dims = "season"))
 #' plot(stk$stock.a@stock.n)
 #'
-#' lfq <- FLIBM2lfq(stk)
+#' lfq <- flq2lfq(flq = stk$stock.l@catch.n)
 #' pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
 #' with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
 #'
@@ -42,14 +42,14 @@
 #' plot(lfq2, Fname = "rcounts", hist.sc = 0.5)
 #' }
 #'
-FLIBM2lfq <- function(obj){
+flquant2lfq <- function(flq){
   # plot length-frequency
-  DIM <- dim(obj$stock.l@catch.n)
-  DIMNAMES <- dimnames(obj$stock.l@catch.n)
+  DIM <- dim(flq)
+  DIMNAMES <- dimnames(flq)
 
   lfq <- list()
   lfq$catch <- t(array(
-    aperm(obj$stock.l@catch.n, c(4,2,1,3,5,6)),
+    aperm(flq, c(4,2,1,3,5,6)),
     dim = c(DIM[4]*DIM[2],DIM[1])
   ))
   lfq$catch <- replace(lfq$catch, is.na(lfq$catch), 0)
