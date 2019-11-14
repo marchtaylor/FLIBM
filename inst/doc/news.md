@@ -1,3 +1,15 @@
+### FLIBM 0.3.2
+
+---
+
+##### New features
+      - `flquant2flq` replaces FLIBM2lfq. Input is now an FLQuant object
+      for more flexibility.
+
+
+<br><br>
+
+
 ### FLIBM 0.3.1
 
 ---
