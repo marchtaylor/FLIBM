@@ -1,0 +1,440 @@
+---
+title: "FLIBM Manual"
+output: 
+  html_document:
+    number_sections: TRUE
+    df_print: paged
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+vignette: >
+  %\VignetteIndexEntry{FLIBM_manual}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache=TRUE, cache.path='cache/',
+  fig.path  ='tex/man-',
+  fig.align='center', comment=NA,
+  message=FALSE, warning=FALSE, echo=TRUE,
+  fig.width=6, fig.height=4.5)
+```
+
+# Description
+FLIBM is a individual-based model (IBM) framework for the simulation of fish or invertibrate populations, and should provide a flexible structure that allows for modification given the population under study. Presently, the IBM describes processes affecting life history in terms of length (e.g. growth, mortality, maturity). This faciltates the generation of length-frequency data (FLD), which is typically used in many data-poor assessment approaches. Nevertheless, an individual's age is also followed in order to be able to record both length- and age-based summary statistics in the form of `FLStock` objects (see FLR project: <http://www.flr-project.org/>). Following the FLR framework allows for integration in other FLR-related recources. 
+
+The main sequence of processes in the IBM operating model are as follows:
+
+1. *update* - Updates the states of individuals at the beginning of a time step (e.g. mortality rates, maturity).
+2. *reproduce* - Creates new individuals based on spawning schedule and stock recruitment relationship.
+3. *die* - Determines individuals that die, either naturally or from fishing.
+4. *record* - Records the state of the population in FLStock objects (e.g. numbers, mean weight by age and length, mortality rates, etc.).
+5. *remove* - Removes dead individuals.
+6. *grow* - Grows individuals according to growth function, resulting in changes to length and weight variables.
+
+Generally, the model should be run at a sufficiently high number of interannual time steps (default = 12, i.e. monthly) to produce realistic behaviour and summary indices. 
+
+
+
+# Setup
+The FLIBM imports the package `FLCore` and recommends `ggplotFL` for use of summary plotting functions.
+
+```{r, load_packages}
+library(FLIBM)
+library(FLCore)
+library(ggplotFL)
+library(data.table)
+set.seed(42) # for reproducibility
+```
+
+## Creating new FLIBM object
+The `create.FLIBM` function is used to intialize an FLIBM object. As with `FLStock` and `FLQuant` objects, one defines 6 data dimensions:
+
+1. *age* or *length* - Classes of age or length
+2. *year* - Calendar year 
+3. *unit* - Division of the population (e.g. by sex)
+4. *season* - Temporal strata shorter than year
+5. *area* - Spatial stratification
+6. *iter* - Replicates
+
+Other arguments for `create.FLIBM` are related to units of numbers (`n.units`) and weights (`wt.units`).
+
+```{r, createFLIBM}
+stk <- create.FLIBM(
+  length = 0:85, age = 0:6, 
+  year = ac(2000:2009),
+  season = ac(1:12),
+  n.units = "1e3", wt.units = "kg"
+)
+```
+
+## FLIBM class structure
+The basic structure of an FLIBM class is as follows:
+```{r, summaryFLIBM}
+summary(stk)
+```
+
+There are three main types of objects within the class:
+
+1. *recording* - These are the `FLStock` objects `obj$stock.l` and `obj$stock.a` for length- and age-based IBM summary statistics, respectively, which are recorded at the start each time step.
+2. *controlling* - These are functions (and parameters) that control the attributes of individuals (e.g. `obj$growth`, `obj$rec`, `obj$m`, `obj$harvest`).
+3. *population* - This holds the current population of individuals (`obj$inds`). It is a multi-level list class with the dimensions "unit", "area" and "iter", following the framework of FLStock objects (e.g. `obj$inds[[unit]][[area]][[iter]]`)
+
+
+
+## Editing FLIBM objects
+
+### Controlling objects
+
+The main objects types that are manipulated by the user are the *controlling* objects.
+
+1. **mortality**
+2. **harvest**
+3. **growth**
+4. **maturity**
+5. **recruitment**
+
+
+
+
+```{r, parAdj}
+stk$rec$params['rmax'] <- 1e4
+```
+
+
+### Recording objects 
+
+By default, FLStock objects are set up to have fbar ranges spanning the full range of dimension 1 (`age` and `length`).
+
+```{r, range}
+range(stk$stock.a); range(stk$stock.l)
+```
+
+For plotting and further FLR-related functionality, it is advised to adjust these as appropriate, *e.g.*:
+```{r, fbarAdj}
+range(stk$stock.a)[c("minfbar", "maxfbar")] <- c(1,3)
+range(stk$stock.a)
+```
+
+
+## Spin-up
+
+A spin-up of the ìnds`is also possible. At the moment this function uses the control information from the first simulation year.
+
+```{r, spinup, paged.print=TRUE}
+stk <- spinup.FLIBM(obj = stk, nyearsslope = 10)
+```
+
+
+
+Viewing the `$inds` 
+```{r, histLFQ}
+ggplot(stk$inds, aes(x = length)) + 
+  theme(text = element_text(size=12)) + 
+  geom_histogram(color = "black", fill = "white", 
+    na.rm=TRUE)
+```
+
+
+
+# Advancing the stock forward in time
+
+```{r, stkAdv}
+stk <- adv.FLIBM(stk, years = ac(2000:2003), monitor = FALSE)
+
+# plot ssb
+df <- as.data.frame(stock.n(stk$stock.a) 
+  * stock.wt(stk$stock.a) * mat(stk$stock.a))
+df$date <- as.Date(paste(as.numeric(df$year), 
+  as.numeric(as.character(df$season)), "01", sep = "-"), 
+  format = "%Y-%m-%d")
+df <- aggregate(x = df$data, by = list(date = df$date), 
+  FUN = sum, na.rm=TRUE)
+df$x[df$x == 0] <- NA
+
+p <- ggplot(data = df, aes(x = date, y = x)) +
+  geom_line() +
+  scale_y_continuous(limits = c(0,NA))
+  print(p)
+```
+
+```{r, stkN}
+# plot stock numbers
+plot(stk$stock.a@stock.n)
+```
+
+Summary stats
+
+```{r, simplify}
+plot(simplifySeason(stk))
+```
+
+
+
+# Indicators and plotting
+
+## LFQ
+```{r, LFQ1}
+# plot length-frequency
+lfq <- flquant2lfq(stk$stock.l@catch.n)
+pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
+with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
+```
+
+
+
+## Mortality
+
+```{r, mortality}
+df <- data.frame(
+  age = as.numeric(dimnames(stk$stock.a@catch.n)$age), 
+  n = c(apply(window(stk$stock.a@catch.n, start=2003, end=2003), 
+    1, sum, na.rm=TRUE)))
+
+plot(log(n) ~ age, df)
+fit <- lm(log(n) ~ age, df, subset = age %in% 2:5)
+points(log(n) ~ age, df, subset = age %in% 2:5, pch=20)
+abline(fit, col=4)
+usr <- par()$usr
+text(0.9*usr[2], 0.9*usr[4], 
+  labels = bquote(italic(Z)==.(sprintf("%.2f",-round(coef(fit)[2], 2)))), 
+  pos = 2, col=4)
+```
+
+## Other: F, maturity, mean Lm etc...
+To come...
+
+length at maturity
+```{r, Lmat}
+df <- as.data.frame(apply(stk$stock.l@mat[,"2003"], 
+  1, mean, na.rm=TRUE))
+df <- na.omit(df)
+df$length <- df$length+0.5 # bin mid-length
+fit <- glm(data ~ length, data = df, 
+  family = binomial(link = "logit"))
+pred <- predict(fit, se.fit=TRUE)
+df <- cbind(df, pred)
+# Calculate confidence intervals
+std <- qnorm(0.95 / 2 + 0.5)
+df$ymin <- fit$family$linkinv(df$fit - std * df$se.fit)
+df$ymax <- fit$family$linkinv(df$fit + std * df$se.fit)
+df$fit <- fit$family$linkinv(df$fit)  # Rescale to 0-1
+
+plot(data ~ length, data = df, t="n", ylab="proportion mature")
+points(data ~ length, data = df, col=adjustcolor(1, 0.5))
+lines(fit ~ length, df, col=1)
+lrPerc <- function(alpha, beta, p) (log(p/(1-p))-alpha)/beta
+L50 <- lrPerc(alpha=coef(fit)[1], beta=coef(fit)[2], p=0.5)
+lines(x=c(L50,L50,0), y=c(-100,0.5,0.5), lty=2, col=2)
+text(x=L50, y=0.5, labels = bquote(L[mat]==.(round(L50,2))), pos=4, col=2 )
+```
+
+
+
+
+Mean length in catch:
+
+```{r, meanL}
+df <- expand.grid(
+  length = as.numeric(dimnames(stk$stock.l@catch.n)[[1]])+0.5,
+  year = as.numeric(dimnames(stk$stock.l@catch.n)[[2]])
+)
+tmp <- apply(stk$stock.l@catch.n, 1:2, sum, na.rm=TRUE)
+df$n = c(tmp)
+df$lengthProd <- df$length * df$n
+
+agg1 <- aggregate(cbind(lengthProd, n) ~ year, data = df, 
+  FUN = sum, na.rm=TRUE)
+agg1$meanLength <- agg1$lengthProd / agg1$n
+plot(meanLength ~ year, agg1, t="b", ylim=range(df$length))
+abline(h = L50, lty=2, col=8)
+```
+
+
+Yearly fishing mortality:
+
+```{r, stkHarvest}
+df <- apply(stk$stock.a@harvest, 1:2, sum, na.rm=TRUE)
+plot(df)
+```
+
+
+# Advanced
+
+
+## Simulating fishery development over time
+
+```{r, harvestDev}
+year <- as.numeric(dimnames(stk$stock.a@stock.n)[[2]])
+steepness <- 1
+FMmax <- 0.7*1.5
+FMs <- FMmax / (1 + exp(-steepness * (year - 2004) ))
+
+# spin-up with starting F
+stk$harvest$params$FM <- FMs[1]
+stk <- spinup.FLIBM(obj = stk, nyearsslope = 5, monitor = FALSE)
+for(y in seq(year)){
+  stk$harvest$params$FM <- FMs[y]
+  stk <- adv.FLIBM(obj = stk, year = ac(year[y]), monitor = FALSE)
+}
+
+# plot stock numbers
+plot(stk$stock.a@stock.n)
+```
+
+
+View biomass and spawning stock biomass development by year:
+
+```{r, SSB}
+# B
+dat1 <- as.data.frame(stock.n(stk$stock.a) * stock.wt(stk$stock.a),
+  date=TRUE)
+dat1$age <- factor(dat1$age)
+
+# SSB
+dat2 <- as.data.frame(stock.n(stk$stock.a) * stock.wt(stk$stock.a) *
+    mat(stk$stock.a), date=TRUE)
+dat2 <- aggregate(x = dat2$data, by = list(date = dat2$date), 
+  FUN = sum, na.rm=TRUE)
+dat2$age <- factor("0")
+
+p <- ggplot2::ggplot(data = dat1, 
+  aes(x=date, y=data, fill=age, group=age)) +
+  theme_set(theme_gray(base_size = 9)) +
+  geom_area(position = 'stack') +
+  scale_fill_brewer(palette="Spectral") +
+  geom_line(data = dat2, aes(x=date, y=x) ) +
+  ylab("Biomass (t)") +
+  theme(axis.text.x=element_text(angle = 90, hjust=1, vjust = 0.5))
+  print(p)
+```
+
+
+
+Mean length in catch:
+
+```{r, meanL2, echo=FALSE}
+df <- expand.grid(
+  length = as.numeric(dimnames(stk$stock.l@catch.n)[[1]])+0.5,
+  year = as.numeric(dimnames(stk$stock.l@catch.n)[[2]])
+)
+tmp <- apply(stk$stock.l@catch.n, 1:2, sum, na.rm=TRUE)
+df$n = c(tmp)
+df$lengthProd <- df$length * df$n
+
+agg1 <- aggregate(cbind(lengthProd, n) ~ year, data = df, 
+  FUN = sum, na.rm=TRUE)
+agg1$meanLength <- agg1$lengthProd / agg1$n
+plot(meanLength ~ year, agg1, t="b", ylim=range(df$length))
+abline(h = L50, lty=2, col=8)
+```
+
+Fishing mortality:
+
+```{r}
+df <- apply(stk$stock.a@harvest, 1:2, sum, na.rm=TRUE)
+plot(df)
+```
+
+
+## Seasonal growth and recruitment
+
+More to come...
+
+```{r}
+# pulsed recruitment
+stk$rec$params$season_wt[] <- 0
+stk$rec$params$season_wt[3:5] <- c(0.25, 1, 0.25)
+
+# seasonal growth oscillation
+stk$growth$params['C'] <- 0.75
+
+# fishing mortality
+stk$harvest$params['FM'] <- 0.7
+
+# spinup and advance
+stk <- adv.FLIBM(stk, years = ac(2000:2009), monitor = FALSE)
+
+# plot stock numbers
+plot(stk$stock.a@stock.n)
+```
+
+
+The function `simplifySeason` can be used to collapse the season dimension, resulting in the more typical yearly FLStock object. The following example also removes the age zero group to define age = 1 as recruits. Without this change, recruits are not plotted since no individuals of age = 0 are alive at the start of the year. This object can be direcly plotted, providing a clear visualization of the main stock attributed (recruitment, SSB, Catch, fishing mortality).
+
+```{r}
+# summary stats
+tmp <- simplifySeason(stk)
+tmp <- tmp[ac(1:range(tmp)["max"]),] # remove age=0 group
+plot(tmp)
+```
+
+
+LFQ 
+
+```{r}
+# plot length-frequency
+lfq <- flquant2lfq(stk$stock.l@catch.n)
+pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
+with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
+```
+
+
+## Recruitment variation
+```{r, recr_var}
+# add log-normal noise to rec covar (one value per year)
+stk$rec$covar[] <- rlnorm(n = dim(stk$rec$covar)[2], meanlog = 0, sdlog = 0.5)
+
+stk <- adv.FLIBM(stk, years = ac(2000:2009), monitor = FALSE)
+
+# plot stock numbers
+plot(stk$stock.a@stock.n)
+```
+
+
+LFQ 
+
+```{r}
+# plot length-frequency
+lfq <- flquant2lfq(stk$stock.l@catch.n)
+pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
+with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
+```
+
+
+
+# References
+
+L. T. Kell, I. Mosqueira, P. Grosjean, J-M. Fromentin, D. Garcia, R. Hillary, E. Jardim, S. Mardle, M. A. Pastoors, J. J. Poos, F. Scott, R. D. Scott; FLR: an open-source framework for the evaluation and development of management strategies. *ICES J Mar Sci* 2007; 64 (4): 640-646. doi: [10.1093/icesjms/fsm012](https://doi.org/10.1093/icesjms/fsm012).
+
+
+# More information
+
+* You can submit bug reports, questions or suggestions on this tutorial at <https://gitlab.com/marchtaylor/FLIBM/issues>.
+* Alternatively, send a pull request to <https://gitlab.com/marchtaylor/FLIBM/>.
+
+
+## Software Versions
+
+* `r version$version.string`
+* data.table: `r packageVersion('data.table')`
+* FLCore: `r packageVersion('FLCore')`
+* FLIBM: `r packageVersion('FLIBM')`
+* ggplotFL: `r packageVersion('ggplotFL')`
+* TropFishR: `r packageVersion('TropFishR')`
+* **Compiled**: `r format(Sys.Date(), '%Y-%b-%d')`
+
+
+## License
+
+This document is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0) license.
+
+## Author information
+
+**Marc Taylor**. Thünen Institute of Sea Fisheries, Marine Living Resources Unit, Herwigstraße 31, 27572 Bremerhaven, Germany. <https://www.thuenen.de/en/sf/>
+
+

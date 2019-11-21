@@ -8,6 +8,10 @@ output:
     toc_depth: 3
     toc_float:
       collapsed: true
+vignette: >
+  %\VignetteIndexEntry{Assessment_w_FLIBM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 
 ---
 
@@ -250,7 +254,7 @@ par(op)
 **Fit growth parameters**
 
 ```{r}
-lfq <- FLIBM2lfq(stk)
+lfq <- flquant2lfq(stk$stock.l@catch.n)
 pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
 with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
 

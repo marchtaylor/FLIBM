@@ -36,7 +36,7 @@ dim(stk$inds)
 plot(simplify(stk$stock.a, dims = "season"))
 plot(stk$stock.a@stock.n)
 
-lfq <- flq2lfq(flq = stk$stock.l@catch.n)
+lfq <- flquant2lfq(flq = stk$stock.l@catch.n)
 pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
 with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
 

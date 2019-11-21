@@ -8,6 +8,10 @@ output:
     toc_depth: 3
     toc_float:
       collapsed: true
+vignette: >
+  %\VignetteIndexEntry{FLIBM_manual}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 
 ---
 
@@ -176,7 +180,7 @@ plot(simplifySeason(stk))
 ## LFQ
 ```{r, LFQ1}
 # plot length-frequency
-lfq <- FLIBM2lfq(stk)
+lfq <- flquant2lfq(stk$stock.l@catch.n)
 pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
 with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
 ```
@@ -374,7 +378,7 @@ LFQ
 
 ```{r}
 # plot length-frequency
-lfq <- FLIBM2lfq(stk)
+lfq <- flquant2lfq(stk$stock.l@catch.n)
 pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
 with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
 ```
@@ -396,7 +400,7 @@ LFQ
 
 ```{r}
 # plot length-frequency
-lfq <- FLIBM2lfq(stk)
+lfq <- flquant2lfq(stk$stock.l@catch.n)
 pal <- colorRampPalette(c("grey30",5,7,2), bias=2)
 with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
 ```

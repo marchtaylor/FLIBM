@@ -13,6 +13,14 @@ LQ(L50, wqs, targQ = 0.95)
 
 \item{targQ}{target probability quantile (Default = 95\%)}
 }
+\value{
+numeric, length value corresponding to target quantile (`targQ`).
+}
 \description{
 Calculate length quantile for a given logistic ogive
+}
+\examples{
+LQ(L50 = 50, wqs = 5, targQ = 0.95)
+
+
 }

@@ -23,7 +23,7 @@
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' data(stkMed)
 #'
 #' # obj$rec parameters should result in high recruitment for the given
@@ -44,7 +44,7 @@
 #'
 #' # with refptPlot
 #' calcRefpts(resdf, ypr=TRUE, spar=0.3)
-#'
+#' }
 #'
 ypr.FLIBM <- function(
   obj = NULL,

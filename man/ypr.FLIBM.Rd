@@ -42,7 +42,7 @@ data.frame
 bla
 }
 \examples{
-
+\donttest{
 data(stkMed)
 
 # obj$rec parameters should result in high recruitment for the given
@@ -63,6 +63,6 @@ plot(Lopt ~ FM, resdf, t = "o")
 
 # with refptPlot
 calcRefpts(resdf, ypr=TRUE, spar=0.3)
-
+}
 
 }

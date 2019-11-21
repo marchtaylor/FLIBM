@@ -44,7 +44,7 @@ plot(stk$stock.a@stock.n)
 DIM <- dim(stk$stock.l@catch.n)
 DIMNAMES <- dimnames(stk$stock.l@catch.n)
 
-lfq <- FLIBM2lfq(stk)
+lfq <- flquant2lfq(stk$stock.l@catch.n)
 
 pal <- colorRampPalette(c("grey30",5,7,2), bias=1.5)
 with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
@@ -53,10 +53,10 @@ with(lfq, image(x=dates, y=midLengths, z=t(catch), col=pal(100)))
 # numbers by age at start of the year
 stk$stock.a@range[c("minfbar", "maxfbar")] <- c(2,4)
 stk.yr <- simplifySeason(stk)
-stk.yr <- stk.yr[2:dim(stk.yr)[1],]
+stk.yr <- stk.yr[2:dim(stk.yr)[1],] # removes age=0 class
 plot(stk.yr)
 
-# Biomass
+# Biomass at age
 plot(stk$stock.a@stock.n[,,,1,,]*stk$stock.a@stock.wt[,,,1,,])
 
 # catch curve

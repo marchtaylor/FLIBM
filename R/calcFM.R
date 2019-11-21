@@ -22,6 +22,7 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' set.seed(1)
 #' stk <- create.FLIBM(year=ac(2000:2009))
 #' range(stk$stock.a)[c("minfbar", "maxfbar")] <- c(1,3)
@@ -52,7 +53,7 @@
 #'
 #'
 #'
-#' ### OTHER OPTION WITH GA ###
+#' ### OTHER OPTION WITH GA  - not cxurrently used ###
 #'
 #' system.time(res <- calcFM(obj = stk, Ctarget = 1200, year = "2005",
 #'   seed = 1, popSize = 10, maxiter = 20, abstol = 5))
@@ -72,7 +73,7 @@
 #' # fishing mortality
 #' apply(harvest(stk2$stock.a),1:2, sum, na.rm=TRUE)
 #' fbar(simplifySeason(stk2))
-#'
+#' }
 #'
 calcFM <- function(
   obj,
@@ -81,10 +82,6 @@ calcFM <- function(
   lower = 0.01,
   upper = 2,
   year = NULL,
-  unit = NULL,
-  season = NULL,
-  area = NULL,
-  iter = NULL,
   seed = 1,
   # popSize = 10, maxiter = 20,
   abstol = 5
@@ -119,11 +116,7 @@ calcFM <- function(
     obj.t2$harvest$params$FM <- FM
     set.seed(seed)
     obj.t2 <- adv.FLIBM(obj.t2,
-      year = year,
-      unit = unit,
-      season = season,
-      area = area,
-      iter = iter,
+      years = year,
       monitor = FALSE)
     Ca <- apply(obj.t2$stock.a@catch.n * obj.t2$stock.a@catch.wt,
       2, sum, na.rm=TRUE)
@@ -136,7 +129,7 @@ calcFM <- function(
     lower = FMStart*0.5, upper = FMStart*1.5,
     method = "Brent", control = list(trace = 4, abstol = abstol))
 
-  # GA version
+  # # GA version
   # res <- ga(type = "real-valued", fitness = objFun,
   #   lower = FMStart*0.5, upper = FMStart*1.5,
   #   suggestions = matrix(FMStart, 1, 1),

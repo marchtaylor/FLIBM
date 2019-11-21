@@ -6,9 +6,8 @@ Date: 2019-10-15
 Author: Marc H. Taylor
 Maintainer: Marc H. Taylor <marc.taylor@thuenen.de>
 Depends:
-    R (>= 3.0.0),
+    R (>= 3.5.0),
     FLCore,
-    FLAssess,
     FLash,
     ggplotFL,
     data.table,
@@ -30,3 +29,6 @@ URL: https://gitlab.com/marchtaylor/FLIBM
 Encoding: UTF-8
 LazyData: FALSE
 RoxygenNote: 6.1.1
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+

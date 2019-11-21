@@ -5,8 +5,7 @@
 \title{Calculate FM based on target catch}
 \usage{
 calcFM(obj, Ctarget = 1000, FMStart = NULL, lower = 0.01,
-  upper = 2, year = NULL, unit = NULL, season = NULL,
-  area = NULL, iter = NULL, seed = 1, abstol = 5)
+  upper = 2, year = NULL, seed = 1, abstol = 5)
 }
 \arguments{
 \item{obj}{bla}
@@ -21,6 +20,10 @@ calcFM(obj, Ctarget = 1000, FMStart = NULL, lower = 0.01,
 
 \item{year}{bla}
 
+\item{seed}{bla}
+
+\item{abstol}{numeric. Absolute tolerance for quota}
+
 \item{unit}{bla}
 
 \item{season}{bla}
@@ -28,10 +31,6 @@ calcFM(obj, Ctarget = 1000, FMStart = NULL, lower = 0.01,
 \item{area}{bla}
 
 \item{iter}{bla}
-
-\item{seed}{bla}
-
-\item{abstol}{numeric. Absolute tolerance for quota}
 }
 \value{
 value
@@ -40,6 +39,7 @@ value
 Calculate FM based on target catch
 }
 \examples{
+\donttest{
 set.seed(1)
 stk <- create.FLIBM(year=ac(2000:2009))
 range(stk$stock.a)[c("minfbar", "maxfbar")] <- c(1,3)
@@ -70,7 +70,7 @@ fbar(simplifySeason(stk2))
 
 
 
-### OTHER OPTION WITH GA ###
+### OTHER OPTION WITH GA  - not cxurrently used ###
 
 system.time(res <- calcFM(obj = stk, Ctarget = 1200, year = "2005",
   seed = 1, popSize = 10, maxiter = 20, abstol = 5))
@@ -90,6 +90,6 @@ apply(stk2$stock.a@catch.n * stk2$stock.a@catch.wt, 2, sum, na.rm=TRUE)
 # fishing mortality
 apply(harvest(stk2$stock.a),1:2, sum, na.rm=TRUE)
 fbar(simplifySeason(stk2))
-
+}
 
 }

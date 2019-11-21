@@ -43,7 +43,7 @@ data.frame
 bla
 }
 \examples{
-
+\donttest{
 data(stkMed)
 stkMed$rec$params$rmax <- 1e2
 resdf <- fmsy.FLIBM(stkMed, years = ac(2000:2009),
@@ -53,7 +53,7 @@ resdf <- fmsy.FLIBM(stkMed, years = ac(2000:2009),
   parallel = TRUE
 )
 calcRefpts(resdf, ypr = FALSE, spar=0.15)
-
+}
 
 
 }
