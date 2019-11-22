@@ -414,8 +414,8 @@ L. T. Kell, I. Mosqueira, P. Grosjean, J-M. Fromentin, D. Garcia, R. Hillary, E.
 
 # More information
 
-* You can submit bug reports, questions or suggestions on this tutorial at <https://gitlab.com/marchtaylor/FLIBM/issues>.
-* Alternatively, send a pull request to <https://gitlab.com/marchtaylor/FLIBM/>.
+* You can submit bug reports, questions or suggestions on this tutorial at <https://github.com/marchtaylor/FLIBM/issues>.
+* Alternatively, send a pull request to <https://github.com/marchtaylor/FLIBM/>.
 
 
 ## Software Versions

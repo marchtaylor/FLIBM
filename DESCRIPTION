@@ -25,7 +25,7 @@ Description: The FLIBM model is developed along the lines of the
     through treatment of rates (natural and fishing mortality) 
     as probabilties of dying.
 License: GPL-3
-URL: https://gitlab.com/marchtaylor/FLIBM
+URL: https://github.com/marchtaylor/FLIBM
 Encoding: UTF-8
 LazyData: FALSE
 RoxygenNote: 6.1.1
