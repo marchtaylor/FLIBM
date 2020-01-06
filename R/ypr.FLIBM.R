@@ -43,7 +43,7 @@
 #' plot(Lopt ~ FM, resdf, t = "o")
 #'
 #' # with refptPlot
-#' calcRefpts(resdf, ypr=TRUE, spar=0.3)
+#' calcRefpts(resdf, ypr=TRUE, spar=0.2)
 #' }
 #'
 ypr.FLIBM <- function(
@@ -76,93 +76,18 @@ ypr.FLIBM <- function(
 
   parFun <- function(x) {
     library(FLIBM)
-    set.seed(seed[x])
-    obj.x <- obj
-    RAN <- range(obj.x$stock.a)
-    DIM <- dim(obj.x$stock.a@stock.n)
-    DIMNAMES <- dimnames(obj.x$stock.a@stock.n)
-    obj.x$harvest$params$FM <- FMs[x]
-    obj.x$stock.a@stock.n[] <- NaN
-    obj.x$stock.a@catch.n[] <- NaN
-    obj.x$stock.a@harvest[] <- NaN
-    obj.x$stock.l@stock.n[] <- NaN
-    obj.x$stock.l@catch.n[] <- NaN
-    obj.x$stock.l@harvest[] <- NaN
-    obj.x$inds <- data.table::data.table()
-    obj.x$rec$covar[] <- 0
-    obj.x$rec$covar[,FLCore::ac(years[1])] <- 1
-    recr.season <- seq(DIM[4])*NaN
 
-    for (year in years) {
-      for (season in DIMNAMES$season) {
-        # unit <- DIMNAMES$unit[1]
-        # area <- DIMNAMES$area[1]
-        # iter <- DIMNAMES$iter[1]
+    res <- cohort.FLIBM(obj = obj, ssbfec = ssbfec,
+      FM = FMs[x], years = years, seed = seed[x], return.FLIBM = FALSE)
 
-        if (year == years[1]) {
-          yeardec <- as.numeric(year) + (as.numeric(season) -
-            1)/dim(obj.x$stock.l@stock.n)[4]
-          date <- FLIBM::yeardec2date(yeardec)
-          if (season == dim(obj.x$stock.l@stock.n)[4]) {
-            yeardec2 <- as.numeric(year) + 1
-            date2 <- FLIBM::yeardec2date(yeardec2)
-          }  else {
-            yeardec2 <- as.numeric(year) + (as.numeric(season))/dim(obj.x$stock.l@stock.n)[4]
-            date2 <- FLIBM::yeardec2date(yeardec2)
-          }
-          tincr <- yeardec2 - yeardec
-          ARGS.x <- list(yeardec = yeardec, yeardec2 = yeardec2,
-            date = date, tincr = tincr,
-            year = year, season = season,
-            # unit = unit, area = area, iter = iter,
-            ssbfec = ssbfec)
-          ARGS.x <- c(ARGS.x, obj.x$rec$params)
-          args.incl <- which(names(ARGS.x) %in% names(formals(obj.x$rec$model)))
-          ARGS.x <- ARGS.x[args.incl]
-          n.recruits <- ceiling(c(do.call(obj.x$rec$model,
-            ARGS.x)))
-          recr.season[match(season, DIMNAMES$season)] <- n.recruits
-          if (n.recruits > 0) {
-            newinds <- obj.x$make.inds(n = n.recruits,
-              obj = obj.x)
-            obj.x$inds <- data.table::rbindlist(list(obj.x$inds,
-              newinds))
-          }
-        }
-        if (nrow(obj.x$inds) > 0) {
-          obj.x <- FLIBM::adv.FLIBM(obj = obj.x,
-            year = year, season = season,
-            # unit = unit, area = area, iter = iter,
-            monitor = FALSE)
-        }
-      }
-    }
-
-    # calculate Lopt
-    stock(obj.x$stock.l) <- computeStock(obj.x$stock.l)
-    # plot(stock(obj.x$stock.l)[,ac(1980:2000)])
-    maxB <- which.max(stock(obj.x$stock.l))
-    Ls <- as.numeric(dimnames(obj.x$stock.l)$length)
-    Lmids <- Ls + diff(Ls)[1]/2
-    Lmat <- obj.x$stock.l@stock.n * NaN
-    Lmat[] <- Lmids
-    Lmu <- as(apply(Lmat * stock.n(obj.x$stock.l), c(2,4), sum, na.rm=TRUE) /
-      apply(stock.n(obj.x$stock.l), c(2,4), sum, na.rm=TRUE), "FLQuant")
-    # plot(Lmu[,ac(1980:2000)])
-    Lopt <- c(Lmu)[maxB]
-
-    objYr.x <- FLIBM::simplifySeason(obj.x)
-    Ca.x <- sum(objYr.x@catch[, years], na.rm = TRUE)
-    SSB.x <- sum(FLCore::ssb(objYr.x[, years]), na.rm = TRUE)
-    Recr.x <- sum(recr.season, na.rm = TRUE)
     if (!is.null(outfile)) {
       sink(file = outfile, append = TRUE)
       print(paste(x, "of", length(FMs), "completed @",
         Sys.time()))
       sink()
     }
-    return(c(unlist(list(FM = FMs[x], Catch = Ca.x, SSB = SSB.x,
-        Recr = Recr.x, Lopt = Lopt, seed = seed[x]))))
+
+    return(c(unlist(res)))
   }
 
   if (parallel) {
