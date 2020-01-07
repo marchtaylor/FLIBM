@@ -5,9 +5,9 @@
 \title{Perform a yeild-per-recruit (YPR) analysis on an FLIBM object}
 \usage{
 ypr.FLIBM(obj = NULL, ssbfec = 1e+06, FMs = seq(0, 1, 0.05),
-  years = dimnames(obj$stock.a)$year, parallel = TRUE,
-  no_cores = detectCores() - 1, clusterType = "PSOCK",
-  outfile = "output.txt", seed = 1)
+  years = dimnames(obj$stock.a)$year, purgeProb = 0.2,
+  parallel = TRUE, no_cores = detectCores() - 1,
+  clusterType = "PSOCK", outfile = "output.txt", seed = 1)
 }
 \arguments{
 \item{obj}{FLIBM object.}

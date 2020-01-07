@@ -5,8 +5,8 @@
 \title{Simulate a single cohort}
 \usage{
 cohort.FLIBM(obj = NULL, ssbfec = 1e+06, FM = 0.3,
-  years = dimnames(obj$stock.a)$year, seed = 1, monitor = FALSE,
-  return.FLIBM = FALSE)
+  years = dimnames(obj$stock.a)$year, seed = 1, purgeProb = 0.2,
+  monitor = FALSE, return.FLIBM = FALSE)
 }
 \arguments{
 \item{obj}{FLIBM object.}
@@ -40,7 +40,7 @@ data(stkMed)
 stkMed$rec$params$rmax <- 1e5
 obj <- stkMed
 
-res <- cohort.FLIBM(obj, ssbfec = 5e5, FM = 0.3, seed = 1,
+res <- cohort.FLIBM(obj, ssbfec = 5e5, FM = 0.3, seed = 1, monitor = TRUE,
   return.FLIBM = TRUE)
 
 plot(res$obj$stock.a@stock.n[,ac(1980:1995)])

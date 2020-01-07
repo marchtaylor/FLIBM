@@ -6,6 +6,7 @@ working
 tmp
 output.txt
 % vignettes
+vignettes/tex
 % doc
 Meta
 doc

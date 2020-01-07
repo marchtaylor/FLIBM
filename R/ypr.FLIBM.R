@@ -51,6 +51,7 @@ ypr.FLIBM <- function(
   ssbfec = 1e6,
   FMs = seq(0,1,0.05),
   years = dimnames(obj$stock.a)$year,
+  purgeProb = 0.2,
   parallel = TRUE,
   no_cores = detectCores() - 1,
   clusterType = "PSOCK",
@@ -78,7 +79,8 @@ ypr.FLIBM <- function(
     library(FLIBM)
 
     res <- cohort.FLIBM(obj = obj, ssbfec = ssbfec,
-      FM = FMs[x], years = years, seed = seed[x], return.FLIBM = FALSE)
+      FM = FMs[x], years = years, seed = seed[x], purgeProb = purgeProb,
+      return.FLIBM = FALSE)
 
     if (!is.null(outfile)) {
       sink(file = outfile, append = TRUE)
