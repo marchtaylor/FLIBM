@@ -1,3 +1,18 @@
+### FLIBM 0.3.3
+
+---
+
+##### New features
+      - `cohort-FLIBM` added. This simplified simulation function can be used
+      alone to simulate a single cohort. The resulting object can be returned.
+      `ypr.FLIBM` now serves as a wrapper for this function, allowing one to 
+      explore the effect of variable fishing mortality on a cohort.
+      - Minor changes to vignette building and README.md. 
+
+
+<br><br>
+
+
 ### FLIBM 0.3.2
 
 ---
