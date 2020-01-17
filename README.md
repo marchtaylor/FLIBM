@@ -23,6 +23,6 @@ Installation via `devtools::install_github` may fail with warnings. Another opti
 myurl <- "https://github.com/marchtaylor/FLIBM/archive/v0.3.3.tar.gz"
 z <- tempfile()
 download.file(myurl, z, mode="wb")
-install.packages(z, repos=NULL, INSTALL_opts=c("--no-multiarch"))
+install.packages(z, INSTALL_opts=c("--no-multiarch"))
 file.remove(z) # cleanup
 ```
