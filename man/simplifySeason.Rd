@@ -10,8 +10,6 @@ simplifySeason(obj)
 }
 \arguments{
 \item{obj}{}
-
-\item{obj}{}
 }
 \value{
 FLStock object with season dimension collapsed

@@ -4,12 +4,19 @@
 \alias{fmsy.FLIBM}
 \title{Estimate maximum sustainable yeild (Fmsy) of an FLIBM object}
 \usage{
-fmsy.FLIBM(obj = NULL, FMs = seq(0, 1, 0.1),
+fmsy.FLIBM(
+  obj = NULL,
+  FMs = seq(0, 1, 0.1),
   years = dimnames(obj$stock.a)$year,
-  yearsCompare = dimnames(obj$stock.a)$year, parallel = TRUE,
-  no_cores = detectCores() - 1, clusterType = "PSOCK",
-  outfile = "output.txt", seed = 1, resDir = tempdir(),
-  cleanup = TRUE)
+  yearsCompare = dimnames(obj$stock.a)$year,
+  parallel = TRUE,
+  no_cores = detectCores() - 1,
+  clusterType = "PSOCK",
+  outfile = "output.txt",
+  seed = 1,
+  resDir = tempdir(),
+  cleanup = TRUE
+)
 }
 \arguments{
 \item{obj}{bla}

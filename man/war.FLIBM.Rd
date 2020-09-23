@@ -4,9 +4,16 @@
 \alias{war.FLIBM}
 \title{Calculate width at recruitment (WAR) of a single cohort}
 \usage{
-war.FLIBM(obj = NULL, ssbfec = 1e+06, FM = 0.2,
-  years = dimnames(obj$stock.a)$year, qs = c(0.05, 0.95), minN = 100,
-  monitor = FALSE, plot = TRUE)
+war.FLIBM(
+  obj = NULL,
+  ssbfec = 1e+06,
+  FM = 0.2,
+  years = dimnames(obj$stock.a)$year,
+  qs = c(0.05, 0.95),
+  minN = 100,
+  monitor = FALSE,
+  plot = TRUE
+)
 }
 \arguments{
 \item{obj}{FLIBM object}

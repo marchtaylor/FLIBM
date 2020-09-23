@@ -4,10 +4,20 @@
 \alias{create.FLIBM}
 \title{Create initial FLIBM object}
 \usage{
-create.FLIBM(lengths = seq(0, 85), ages = 0:6, years = ac(2000:2009),
-  units = "unique", seasons = ac(1:12), areas = "unique",
-  iters = "1", n.units = "1e3", wt.units = "kg", name = "synStock",
-  desc = "A synthetic stock", inds = NULL)
+create.FLIBM(
+  lengths = seq(0, 85),
+  ages = 0:6,
+  years = ac(2000:2009),
+  units = "unique",
+  seasons = ac(1:12),
+  areas = "unique",
+  iters = "1",
+  n.units = "1e3",
+  wt.units = "kg",
+  name = "synStock",
+  desc = "A synthetic stock",
+  inds = NULL
+)
 }
 \arguments{
 \item{lengths}{vector. Lengths to define the length extent of

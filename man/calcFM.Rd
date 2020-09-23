@@ -4,8 +4,16 @@
 \alias{calcFM}
 \title{Calculate FM based on target catch}
 \usage{
-calcFM(obj, Ctarget = 1000, FMStart = NULL, lower = 0.01,
-  upper = 2, year = NULL, seed = 1, abstol = 5)
+calcFM(
+  obj,
+  Ctarget = 1000,
+  FMStart = NULL,
+  lower = 0.01,
+  upper = 2,
+  year = NULL,
+  seed = 1,
+  abstol = 5
+)
 }
 \arguments{
 \item{obj}{bla}

@@ -4,8 +4,11 @@
 \alias{window.FLIBM}
 \title{expand FLIBM object years}
 \usage{
-window.FLIBM(obj, start = dims(obj$stock.a)$minyear,
-  end = dims(obj$stock.a)$maxyear)
+window.FLIBM(
+  obj,
+  start = dims(obj$stock.a)$minyear,
+  end = dims(obj$stock.a)$maxyear
+)
 }
 \arguments{
 \item{obj}{FLIBM object}

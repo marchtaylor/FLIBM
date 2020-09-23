@@ -4,9 +4,20 @@
 \alias{calcRefpts}
 \title{Plor results of ypr.FLIBM or Fmsy.FLIBM}
 \usage{
-calcRefpts(resdf, ypr = TRUE, spar = 0.4, y1lab = NULL,
-  y2lab = "SPR", xlab = "FM", Flab = NULL, SPRlab = "SPR",
-  plot = TRUE, mar = c(3, 3, 1, 3), mgp = c(2, 0.5, 0), ps = 10)
+calcRefpts(
+  resdf,
+  ypr = TRUE,
+  spar = 0.4,
+  y1lab = NULL,
+  y2lab = "SPR",
+  xlab = "FM",
+  Flab = NULL,
+  SPRlab = "SPR",
+  plot = TRUE,
+  mar = c(3, 3, 1, 3),
+  mgp = c(2, 0.5, 0),
+  ps = 10
+)
 }
 \arguments{
 \item{resdf}{bla}

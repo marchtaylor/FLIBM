@@ -29,12 +29,20 @@ update.inds <- function(
   }
   tincr <- yeardec2 - yeardec
 
+  # additional arguments for time, year and season
+  time.args <- list(
+    yeardec=yeardec, yeardec2=yeardec2,
+    date=date, tincr=tincr,
+    year=year, season=season)
+
   ### update m
   ARGS <- list()
   args.incl <- which(names(obj$m$params) %in% names(formals(obj$m$model)))
   if(length(args.incl)>0){ARGS <- c(ARGS, obj$m$params[args.incl])}
   args.incl <- names(inds)[names(inds) %in% names(formals(obj$m$model))]
   if(length(args.incl)>0){ARGS <- c(ARGS, inds[, args.incl, with = FALSE])} #DT
+  args.incl <- which(names(time.args) %in% names(formals(obj$m$model)))
+  if(length(args.incl)>0){ARGS <- c(ARGS, time.args[args.incl])}
   inds[, m := do.call(obj$m$model, ARGS)] #DT
 
   ### update harvest
@@ -43,6 +51,8 @@ update.inds <- function(
   if(length(args.incl)>0){ARGS <- c(ARGS, obj$harvest$params[args.incl])}
   args.incl <- names(inds)[names(inds) %in% names(formals(obj$harvest$model))]
   if(length(args.incl)>0){ARGS <- c(ARGS, inds[, args.incl, with = FALSE])} #DT
+  args.incl <- which(names(time.args) %in% names(formals(obj$harvest$model)))
+  if(length(args.incl)>0){ARGS <- c(ARGS, time.args[args.incl])}
   inds[, harvest := do.call(obj$harvest$model, ARGS)] #DT
 
   ### update mat

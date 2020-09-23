@@ -4,11 +4,16 @@
 \alias{trim.FLIBM}
 \title{trim FLIBM dimensions}
 \usage{
-trim.FLIBM(obj, year = dimnames(obj$stock.a)$year,
-  age = dimnames(obj$stock.a)$age, unit = dimnames(obj$stock.a)$unit,
+trim.FLIBM(
+  obj,
+  year = dimnames(obj$stock.a)$year,
+  age = dimnames(obj$stock.a)$age,
+  unit = dimnames(obj$stock.a)$unit,
   season = dimnames(obj$stock.a)$season,
-  area = dimnames(obj$stock.a)$area, iter = dimnames(obj$stock.a)$iter,
-  length = dimnames(obj$stock.l)$length)
+  area = dimnames(obj$stock.a)$area,
+  iter = dimnames(obj$stock.a)$iter,
+  length = dimnames(obj$stock.l)$length
+)
 }
 \arguments{
 \item{obj}{FLIBM object}

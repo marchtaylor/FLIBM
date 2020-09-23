@@ -4,9 +4,16 @@
 \alias{cohort.FLIBM}
 \title{Simulate a single cohort}
 \usage{
-cohort.FLIBM(obj = NULL, ssbfec = 1e+06, FM = 0.3,
-  years = dimnames(obj$stock.a)$year, seed = 1, purgeProb = 0.2,
-  monitor = FALSE, return.FLIBM = FALSE)
+cohort.FLIBM(
+  obj = NULL,
+  ssbfec = 1e+06,
+  FM = 0.3,
+  years = dimnames(obj$stock.a)$year,
+  seed = 1,
+  purgeProb = 0.2,
+  monitor = FALSE,
+  return.FLIBM = FALSE
+)
 }
 \arguments{
 \item{obj}{FLIBM object.}

@@ -4,8 +4,7 @@
 \alias{adv.FLIBM}
 \title{Advance FLIBM stock}
 \usage{
-adv.FLIBM(obj, years = NULL, seasons = NULL, monitor = TRUE,
-  purgeProb = 0.05)
+adv.FLIBM(obj, years = NULL, seasons = NULL, monitor = TRUE, purgeProb = 0.05)
 }
 \arguments{
 \item{obj}{object of class FLIBM}
