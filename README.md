@@ -16,3 +16,13 @@ devtools::install_github("marchtaylor/FLIBM", INSTALL_opts=c("--no-multiarch"))
 WARNING: FLIBM requires a 64 bit installation of R. Installation from source 
 in R for Windows should be carried out using --no-multiarch for a 64-bit-only 
 installation.
+
+Installation via `devtools::install_github` may fail with warnings. Another option is to try a downloading the most recent release, and installing manually:
+
+```
+myurl <- "https://github.com/marchtaylor/FLIBM/archive/v0.3.3.tar.gz"
+z <- tempfile()
+download.file(myurl, z, mode="wb")
+install.packages(z, INSTALL_opts=c("--no-multiarch"))
+file.remove(z) # cleanup
+```
