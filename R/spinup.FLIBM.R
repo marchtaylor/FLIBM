@@ -65,6 +65,6 @@ spinup.FLIBM <- function(
     # }
   }
 
-  obj$inds <- obj.copy$inds
+  obj <- obj.copy
   return(obj)
 }
