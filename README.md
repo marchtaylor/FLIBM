@@ -1,4 +1,4 @@
-# FLIBM :turtle:
+<img src= "hexSticker/hexSticker_flibm.png" width="150">
 
 FLIBM is individual-based model for the simulation of fish stock dynamics. Results of the simulation are recorded in FLR objects ([Fisheries Library for R](http://www.flr-project.org)) (*e.g.* `FLQuant`, `FLStock`). The IBM framework generates age- and length-based data, allowing for integration in a range of stock assessment approaches with differing data requirements. 
 
