@@ -29,7 +29,7 @@ simplifySeason <- function(obj){
   stockSeas <- obj$stock.a
 
   # collapse season dimension and remove years with few to no catches
-  stockYr <- FLCore::simplify(stockSeas, dims = "season", stock.season = ac(1))
+  stockYr <- FLCore::simplify(stockSeas, dims = "season", spwn.season = ac(1))
 
   # correct with true mortality
   harvest(stockYr) <- as(apply(harvest(stockSeas), c(1:3,5:6), sum, na.rm=TRUE), "FLQuant")
@@ -40,31 +40,51 @@ simplifySeason <- function(obj){
   m(stockYr)@units <- m(stockSeas)@units
   m(stockYr) <- replace(m(stockYr), m(stockYr)==Inf, NA)
 
-  # correct .wt slots (weighted mean)
+  # seasonal spawning weighting
+  spwn_wt <- array(0, dim = dim(stock.n(stockSeas)))
+  spwn_wt <- aperm(a = spwn_wt, perm = c(4,1,2,3,5,6))
+  spwn_wt[] <- obj$rec$params$season_wt
+  spwn_wt <- aperm(a = spwn_wt, perm = c(2,3,4,1,5,6))
+
+  # get numbers
+  catch.n(stockYr) <- as(apply(catch.n(stockSeas), c(1:3,5:6), sum, na.rm=TRUE), "FLQuant")
+  landings.n(stockYr) <- catch.n(stockYr)
+  discards.n(stockYr)[] <- 0
+  stock.n(stockYr)[] <- as(array(stock.n(stockSeas)[,,,1,,], dim = dim(stock.n(stockYr))), "FLQuant")
+
+  ## get mean weights
+  catch(stockYr) <- apply(stockSeas@catch.n * stockSeas@catch.wt, 2, sum, na.rm = T)
+  landings(stockYr) <- catch(stockYr)
+  discards(stockYr)[] <- 0
+
+  # use catch proportions to reconstruct catch.wt <- catch.prop / catch.n
+  tmp <- apply(catch.n(stockSeas) * catch.wt(stockSeas), c(1:3,5:6), sum, na.rm=TRUE)
+  tmp <- apply(tmp, 2, FUN = function(x){x/sum(x, na.rm = TRUE)})
+  tmpdf1 <- as.data.frame(tmp)
+  names(tmpdf1)[7] <- "prop"
+  tmpdf2 <- as.data.frame(catch(stockYr))
+  names(tmpdf2)[7] <- "catch"
+  tmpdf3 <- as.data.table(catch.n(stockYr))
+  names(tmpdf3)[7] <- "naa"
+  tmpdf <- merge(x = tmpdf1[,c("age", "year", "prop")], y = tmpdf2[,c("year", "catch")], all.x = T)
+  tmpdf <- merge(x = tmpdf, y = tmpdf3[,c("age", "year", "naa")], all.x = T)
+  tmpdf$data <- tmpdf$catch * tmpdf$prop / tmpdf$naa
+  tmpdf <- tmpdf[order(tmpdf$age, tmpdf$year),]
+  catch.wt(stockYr) <- as.FLQuant(tmpdf[,c("age", "year", "data")])
+
+  landings.wt(stockYr) <- catch.wt(stockYr)
+  discards.wt(stockYr)[] <- 0
+
+
+  # stock.wt is yearly mean, but weighted by numbers during spawning activity (spwn_wt)
   stock.wt(stockYr) <- as(
-    apply(stock.wt(stockSeas) * stock.n(stockSeas), c(1:3,5:6), sum, na.rm=TRUE) /
-      apply(stock.n(stockSeas), c(1:3,5:6), sum, na.rm=TRUE), "FLQuant")
+    apply(stock.wt(stockSeas) * stock.n(stockSeas) * spwn_wt, c(1:3,5:6), sum, na.rm=TRUE) /
+      apply(stock.n(stockSeas) * spwn_wt, c(1:3,5:6), sum, na.rm=TRUE), "FLQuant")
 
-  catch.wt(stockYr) <- as(
-    apply(catch.wt(stockSeas) * catch.n(stockSeas), c(1:3,5:6), sum, na.rm=TRUE) /
-      apply(catch.n(stockSeas), c(1:3,5:6), sum, na.rm=TRUE), "FLQuant")
-
-  landings.wt(stockYr) <- as(
-    apply(landings.wt(stockSeas) * landings.n(stockSeas), c(1:3,5:6), sum, na.rm=TRUE) /
-      apply(landings.n(stockSeas), c(1:3,5:6), sum, na.rm=TRUE), "FLQuant")
-
-  discards.wt(stockYr) <- as(
-    apply(discards.wt(stockSeas) * discards.n(stockSeas), c(1:3,5:6), sum, na.rm=TRUE) /
-      apply(discards.n(stockSeas), c(1:3,5:6), sum, na.rm=TRUE), "FLQuant")
-
-  stock(stockYr) <- FLCore::computeStock(stockYr)
-  catch(stockYr) <- FLCore::computeCatch(stockYr)
-  landings(stockYr) <- FLCore::computeLandings(stockYr)
-  discards(stockYr) <- FLCore::computeDiscards(stockYr)
-
-  spwn_wt <- weighted.mean(0:11/12, obj$rec$params$season_wt)
-  m.spwn(stockYr) <- c(spwn_wt)
-  harvest.spwn(stockYr) <- c(spwn_wt)
+  # add slots on mortality before spawning
+  spwn_wt2 <- weighted.mean(0:11/12, obj$rec$params$season_wt)
+  m.spwn(stockYr) <- c(spwn_wt2)
+  harvest.spwn(stockYr) <- c(spwn_wt2)
 
   return(stockYr)
 }

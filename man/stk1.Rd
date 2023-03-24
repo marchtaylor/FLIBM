@@ -4,7 +4,9 @@
 \name{stk1}
 \alias{stk1}
 \title{stk1 dataset}
-\format{FLIBM class object}
+\format{
+FLIBM class object
+}
 \usage{
 data(stk1)
 }
