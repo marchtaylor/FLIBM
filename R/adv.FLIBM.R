@@ -76,13 +76,15 @@ adv.FLIBM <- function(
     for(season in seasons){
       # year = DIMNAMES$year[1]; season = DIMNAMES$season[3]
       # year;season
-      obj <- update.inds(obj = obj, year = year, season = season)
-      obj <- reproduce.inds(obj = obj, year = year, season = season)
-      obj <- update.inds(obj = obj, year = year, season = season)
-      obj <- die.inds(obj = obj, year = year, season = season)
-      obj <- record.inds(obj = obj, year = year, season = season)
-      obj <- remove.inds(obj = obj, year = year, season = season, purgeProb = purgeProb)
-      obj <- grow.inds(obj = obj, year = year, season = season)
+      if(nrow(obj$inds)>0){
+        obj <- update.inds(obj = obj, year = year, season = season)
+        obj <- reproduce.inds(obj = obj, year = year, season = season)
+        obj <- update.inds(obj = obj, year = year, season = season)
+        obj <- die.inds(obj = obj, year = year, season = season)
+        obj <- record.inds(obj = obj, year = year, season = season)
+        obj <- remove.inds(obj = obj, year = year, season = season, purgeProb = purgeProb)
+        obj <- grow.inds(obj = obj, year = year, season = season)
+      }
       if(monitor){
         cat(paste("year =", year, "| season =", season),"\n")
         flush.console()

@@ -38,7 +38,7 @@ calcRefpts <- function(
 
   if(!0 %in% resdf$FM) warning("FM vector does contain the value zero,
     needed for estimating virgin biomass and SPR")
-  virginSSB <- mean(resdf$SSB[which(resdf$FM == min(resdf$FM))])
+  virginSSB <- mean(resdf$SSB[which(resdf$FM == min(resdf$FM))], na.rm = TRUE)
   resdf$SPR <- resdf$SSB / virginSSB
 
   if(ypr){

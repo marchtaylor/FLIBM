@@ -60,6 +60,12 @@ fmsy.FLIBM <- function(
   }
 
   parFun <- function(x){
+    if(!is.null(outfile)){
+      sink(file=outfile, append = TRUE)
+      print(paste(x, "of", length(FMs), "started @", Sys.time()))
+      sink()
+    }
+
     library(data.table)
     set.seed(seed[x])
 
@@ -135,8 +141,11 @@ fmsy.FLIBM <- function(
 
   Ca <- apply(objAllYr@catch[,yearsCompare], MARGIN = 6, FUN = sum, na.rm = TRUE)
   SSB <- apply(ssb(objAllYr[,yearsCompare]), MARGIN = 6, FUN = mean, na.rm = TRUE)
+  Ca <- replace(c(Ca), is.na(c(Ca)), 0)
+  SSB <- replace(c(SSB), is.na(c(SSB)), 0)
 
   ret <- data.frame(FM = FMs, Catch = c(Ca), SSB = c(SSB), fname = unlist(res), seed = seed)
+
 
   if(cleanup){
     file.remove(as.character(ret$fname))

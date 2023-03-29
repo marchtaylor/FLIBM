@@ -107,9 +107,9 @@ cohort.FLIBM <- function(
   stock(obj.x$stock.l) <- computeStock(obj.x$stock.l)
   # plot(stock(obj.x$stock.l)[,ac(1980:2000)])
   maxB <- which.max(stock(obj.x$stock.l))
-  Ls <- as.numeric(dimnames(obj.x$stock.l)$length)
+  Ls <- as.numeric(dimnames(obj.x$stock.l)$age)
   Lmids <- Ls + diff(Ls)[1]/2
-  Lmat <- obj.x$stock.l@stock.n * NaN
+  Lmat <- obj.x$stock.l@stock.n * NaN # array(NaN, dim = dim(obj.x$stock.l@stock.n))
   Lmat[] <- Lmids
   Lmu <- as(apply(Lmat * stock.n(obj.x$stock.l), c(2,4), sum, na.rm=TRUE) /
     apply(stock.n(obj.x$stock.l), c(2,4), sum, na.rm=TRUE), "FLQuant")

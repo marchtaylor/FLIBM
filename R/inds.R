@@ -258,7 +258,7 @@ record.inds <- function(
   # n.l
   obj$stock.l@stock.n[,year,,season,,] <-
     tapply(inds$n,
-      INDEX = list(length = inds$bin.l,
+      INDEX = list(age = inds$bin.l,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -268,7 +268,7 @@ record.inds <- function(
   # wt.l
   obj$stock.l@stock.wt[,year,,season,,] <-
     tapply(inds$wt,
-      INDEX = list(length = inds$bin.l,
+      INDEX = list(age = inds$bin.l,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -278,7 +278,7 @@ record.inds <- function(
   # mat.l
   obj$stock.l@mat[,year,,season,,] <-
     tapply(inds$mat,
-      INDEX = list(length = inds$bin.l,
+      INDEX = list(age = inds$bin.l,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -288,7 +288,7 @@ record.inds <- function(
   # catch.l
   obj$stock.l@catch.n[,year,,season,,] <-
     tapply(indsFd$Fd,
-      INDEX = list(length = indsFd$bin.l,
+      INDEX = list(age = indsFd$bin.l,
         year = rep(factor(year), nrow(indsFd)),
         unit = indsFd$unit,
         season = rep(factor(season), nrow(indsFd)),
@@ -298,7 +298,7 @@ record.inds <- function(
   # catch.wt.l
   obj$stock.l@catch.wt[,year,,season,,] <-
     tapply(indsFd$wt,
-      INDEX = list(length = indsFd$bin.l,
+      INDEX = list(age = indsFd$bin.l,
         year = rep(factor(year), nrow(indsFd)),
         unit = indsFd$unit,
         season = rep(factor(season), nrow(indsFd)),
@@ -309,7 +309,7 @@ record.inds <- function(
   # m & harvest rates
   n.l.End <-
     tapply(inds$alive,
-      INDEX = list(length = inds$bin.l,
+      INDEX = list(age = inds$bin.l,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -319,7 +319,7 @@ record.inds <- function(
 
   n.l.Md <-
     tapply(inds$Md,
-      INDEX = list(length = inds$bin.l,
+      INDEX = list(age = inds$bin.l,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -329,7 +329,7 @@ record.inds <- function(
 
   n.l.Fd <-
     tapply(inds$Fd,
-      INDEX = list(length = inds$bin.l,
+      INDEX = list(age = inds$bin.l,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -344,7 +344,7 @@ record.inds <- function(
   # age-at-length
   obj$age.l[,year,,season,,] <-
     tapply(inds$age,
-      INDEX = list(length = inds$bin.l,
+      INDEX = list(age = inds$bin.l,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -357,7 +357,7 @@ record.inds <- function(
   # n.a
   obj$stock.a@stock.n[,year,,season,,] <-
     tapply(inds$n,
-      INDEX = list(length = inds$bin.a,
+      INDEX = list(age = inds$bin.a,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -367,7 +367,7 @@ record.inds <- function(
   # wt.a
   obj$stock.a@stock.wt[,year,,season,,] <-
     tapply(inds$wt,
-      INDEX = list(length = inds$bin.a,
+      INDEX = list(age = inds$bin.a,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -377,7 +377,7 @@ record.inds <- function(
   # mat.a
   obj$stock.a@mat[,year,,season,,] <-
     tapply(inds$mat,
-      INDEX = list(length = inds$bin.a,
+      INDEX = list(age = inds$bin.a,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -387,7 +387,7 @@ record.inds <- function(
   # catch.a
   obj$stock.a@catch.n[,year,,season,,] <-
     tapply(indsFd$Fd,
-      INDEX = list(length = indsFd$bin.a,
+      INDEX = list(age = indsFd$bin.a,
         year = rep(factor(year), nrow(indsFd)),
         unit = indsFd$unit,
         season = rep(factor(season), nrow(indsFd)),
@@ -397,7 +397,7 @@ record.inds <- function(
   # catch.wt.a
   obj$stock.a@catch.wt[,year,,season,,] <-
     tapply(indsFd$wt,
-      INDEX = list(length = indsFd$bin.a,
+      INDEX = list(age = indsFd$bin.a,
         year = rep(factor(year), nrow(indsFd)),
         unit = indsFd$unit,
         season = rep(factor(season), nrow(indsFd)),
@@ -408,7 +408,7 @@ record.inds <- function(
   # m & harvest rates
   n.a.End <-
     tapply(inds$alive,
-      INDEX = list(length = inds$bin.a,
+      INDEX = list(age = inds$bin.a,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -418,7 +418,7 @@ record.inds <- function(
 
   n.a.Md <-
     tapply(inds$Md,
-      INDEX = list(length = inds$bin.a,
+      INDEX = list(age = inds$bin.a,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -428,7 +428,7 @@ record.inds <- function(
 
   n.a.Fd <-
     tapply(inds$Fd,
-      INDEX = list(length = inds$bin.a,
+      INDEX = list(age = inds$bin.a,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
@@ -443,7 +443,7 @@ record.inds <- function(
   # length-at-age
   obj$length.a[,year,,season,,] <-
     tapply(inds$length,
-      INDEX = list(length = inds$bin.a,
+      INDEX = list(age = inds$bin.a,
         year = rep(year, nrow(inds)),
         unit = inds$unit,
         season = rep(season, nrow(inds)),
