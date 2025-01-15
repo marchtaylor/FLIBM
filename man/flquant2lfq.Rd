@@ -4,7 +4,7 @@
 \alias{flquant2lfq}
 \title{Convert FLIBM to lfq object}
 \usage{
-flquant2lfq(flq)
+flquant2lfq(flquant)
 }
 \arguments{
 \item{obj}{FLIBM object}

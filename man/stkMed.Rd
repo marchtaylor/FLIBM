@@ -3,7 +3,7 @@
 \docType{data}
 \name{stkMed}
 \alias{stkMed}
-\title{stkMed dataset}
+\title{The stkMed dataset.}
 \format{
 FLIBM class object
 }
@@ -19,9 +19,6 @@ See example for script used to generate data.
 \examples{
 
 library(FLIBM)
-library(FLCore)
-library(ggplotFL)
-library(data.table)
 
 # to load and plot
 data(stkMed)
@@ -82,6 +79,8 @@ stkMed <- adv.FLIBM(obj = stkMed, year = ac(1980:1999))
 # plot stock numbers
 plot(stkMed$stock.a@stock.n[,ac(1980:1999)])
 plot(stkMed$stock.a@harvest[,ac(1980:1999)])
+
+# save(stkMed, file = "data/stkMed.rda")
 }
 
 

@@ -1,5 +1,6 @@
 #' @name stkMed
-#' @title stkMed dataset
+#'
+#' @title The stkMed dataset.
 #'
 #'
 #' @description The \code{stkMed} data generated with the with FLIBM.
@@ -15,9 +16,6 @@
 #' @examples
 #'
 #' library(FLIBM)
-#' library(FLCore)
-#' library(ggplotFL)
-#' library(data.table)
 #'
 #' # to load and plot
 #' data(stkMed)
@@ -78,6 +76,8 @@
 #' # plot stock numbers
 #' plot(stkMed$stock.a@stock.n[,ac(1980:1999)])
 #' plot(stkMed$stock.a@harvest[,ac(1980:1999)])
+#'
+#' # save(stkMed, file = "data/stkMed.rda")
 #' }
 #'
 #'

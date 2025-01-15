@@ -1,6 +1,6 @@
 #' @name stk1
-#' @title stk1 dataset
 #'
+#' @title stk1 dataset
 #'
 #' @description The \code{stk1} data generated with the with FLIBM.
 #' The stock has a seasonal recruitment pattern, with interannual
@@ -15,9 +15,6 @@
 #' @examples
 #'
 #' library(FLIBM)
-#' library(FLCore)
-#' library(ggplotFL)
-#' library(data.table)
 #'
 #' # to load and plot
 #' data(stk1)
@@ -48,7 +45,7 @@
 #'
 #' # historical F
 #' yrs <- 1960:2000
-#' steepness <- 0.75
+#' steepness <- 0.25
 #' FMmax <- 1
 #' FMs <- FMmax / (1 + exp(-steepness * (yrs - 1990) ))
 #' plot(yrs, FMs)
@@ -56,7 +53,7 @@
 #' # Advance
 #' for(yr in seq(yrs)){
 #'   stk1$harvest$params$FM <- FMs[yr]
-#'   stk1 <- adv.FLIBM(obj = stk, year = ac(yrs[yr]))
+#'   stk1 <- adv.FLIBM(obj = stk1, year = ac(yrs[yr]))
 #' }
 #'
 #' # plot stock numbers
@@ -74,6 +71,13 @@
 #'
 #' # plot stock numbers
 #' plot(stk1$stock.a@stock.n)
+#'
+#' # plot yearly object
+#' stkYr <- simplifySeason(stk1)
+#' stkYr <- stkYr[ac(1:range(stkYr)["max"]),] # remove age 0
+#' plot(stkYr)
+#'
+#' # save(stk1, file = "data/stk1.rda")
 #' }
 #'
 #'

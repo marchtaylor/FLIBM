@@ -17,7 +17,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  cache=TRUE, cache.path='cache/',
+  cache=FALSE, cache.path='cache/',
   fig.path  ='tex/assess-',
   fig.align='center', comment=NA,
   message=FALSE, warning=FALSE, echo=TRUE,
@@ -31,12 +31,7 @@ The following packages are used in the tutorial:
 ```{r}
 # required packages
 library(FLIBM)
-library(FLCore)
-library(ggplotFL)
-library(data.table)
 library(FLa4a)
-library(FLXSA)
-library(FLAssess)
 library(FLBRP)
 library(spict)
 library(TropFishR)
@@ -62,19 +57,23 @@ As a first step, we simplify the object to yearly basis and trim the years to in
 # collapse season dimension of age-based FLStock
 stkTrue <- simplifySeason(stk)
 
-# create time series of SSB, and compare to yearly estimates
-tmp2 <- as.data.frame(ssb(stkTrue), date=TRUE)
-spwn_wt <- weighted.mean(0:11/12, stk$rec$params$season_wt)
-tmp2$date <- as.POSIXct(yeardec2date(tmp2$year+spwn_wt))
-plot(  apply(stk$stock.a@stock.n * stk$stock.a@stock.wt * stk$stock.a@mat,
-  c(2,4),sum, na.rm=TRUE)) + 
-  geom_point(mapping = aes(x=date, y=data), data = tmp2)
-
 # exclude zero age class & redefine plusgroup to collapse rare ages
 stkTrue <- stkTrue[ac(1:range(stkTrue)["max"]),] 
 stkTrue <- setPlusGroup(stkTrue, plusgroup = 4, na.rm=TRUE) 
 
+# create time series of SSB, and compare to yearly estimates
+tmp2 <- as.data.frame(apply((stkTrue@stock.n * stkTrue@stock.wt * stkTrue@mat), 2, sum, na.rm = TRUE)) #as.data.frame(ssb(stkTrue))
+# spwn_wt <- weighted.mean(0:11/12, stk$rec$params$season_wt)
+tmp2$date <- yeardec2date(tmp2$year)#+spwn_wt)
+tmp3 <- as.data.frame(apply((stk$stock.a@stock.n * stk$stock.a@stock.wt * stk$stock.a@mat), 
+  MARGIN = c(2:6), sum, na.rm=TRUE))
+tmp3$date <- yeardec2date(tmp3$year + (an(tmp3$season)-1)/12)
+ggplot(data = tmp3) + aes(x = date, y = data) + geom_line() + 
+  geom_point(mapping = aes(x=date, y=data), data = tmp2)
+
+
 # fill in missing slots
+stkTrue@catch.n[] <- replace(stkTrue@catch.n, is.na(stkTrue@catch.n), 0)
 stkTrue@landings.n <- stkTrue@catch.n
 stkTrue@landings.wt <- stkTrue@catch.wt
 stkTrue@discards.n[] <- 0
@@ -114,7 +113,7 @@ fmod <-  formula( ~ factor(age) + s(year, k=10) ) # fishing mortality submodel
 srmod <- formula( ~ s(year, k=6)) # recruitment submodel
 qmod <- list( ~ factor(age)) # survey catchability submodel
 
-tmp <- sca(stkTrue, idx, srmodel=srmod, fmodel = fmod, qmodel = qmod)
+tmp <- sca(stkTrue, idx, srmodel = srmod, fmodel = fmod, qmodel = qmod)
 stk_a4a <- stkTrue + tmp
 
 # plot
@@ -123,20 +122,6 @@ wireframe(harvest(stk_a4a), zlab="F")
 ```
 
 
-## Extended Survivorship Analysis (XSA)
-
-```{r}
-xsaCtrl <- FLXSA.control(tol = 1e-09, maxit=99, min.nse=0.3, fse=2.0,
-  rage = -1, qage = range(stkTrue)["max"]-1, shk.n = TRUE, shk.f = TRUE,
-  shk.yrs = 5, shk.ages= 5, window = 100, tsrange = 99, tspower = 0)
-
-tmp <- FLXSA(stkTrue, idx, xsaCtrl)
-stk_xsa <- stkTrue + tmp
-
-# plot
-plot(FLStocks(true=stkTrue, XSA=stk_xsa, a4a=stk_a4a))
-wireframe(harvest(stk_xsa), zlab="F")
-```
 
 
 ## Reference points
@@ -176,12 +161,29 @@ Cyear <- as.data.frame(apply(Caa, 2, sum))
 
 
 ## Biomass indices
-Baa <- stk$stock.a@stock.n * stk$stock.a@stock.wt
-# sum exploited part (ages > 1)
-Bseas <- apply(Baa[2:7,],c(2,4), sum, na.rm=TRUE)
-Bseas <- as.data.frame(Bseas) 
+# Baa <- stk$stock.a@stock.n * stk$stock.a@stock.wt
+# # sum exploited part (ages > 1)
+# Bseas <- apply(Baa[2:7,],c(2,4), sum, na.rm=TRUE)
+# Bseas <- as.data.frame(Bseas) 
+# Bseas$season <- as.numeric(as.character(Bseas$season))
+# Bseas$yeardec <- Bseas$year + 
+#   ((Bseas$season-1)/max(Bseas$season))
+# Bseas <- Bseas[order(Bseas$yeardec),]
+# Bseas$yeardec <- round(Bseas$yeardec, 3)
+
+# scaled fishing mortality
+Fsc <- apply(stk$stock.a@harvest, MARGIN = c(2:6), 
+    FUN = function(x){x/max(x, na.rm = TRUE)})
+
+tmp <- apply(stk$stock.a@harvest, MARGIN = c(2,4), 
+    FUN = function(x){x/max(x, na.rm = TRUE)})
+tmp <- apply(tmp, MARGIN = 1, sum, na.rm = TRUE)
+tmp <- tmp/max(tmp)
+
+tmp2 <- stk$stock.a@stock.n * stk$stock.a@stock.wt * c(tmp)
+Bseas <- as.data.frame(apply(tmp2, c(2,4), sum, na.rm = T))
 Bseas$season <- as.numeric(as.character(Bseas$season))
-Bseas$yeardec <- Bseas$year + 
+Bseas$yeardec <- Bseas$year +
   ((Bseas$season-1)/max(Bseas$season))
 Bseas <- Bseas[order(Bseas$yeardec),]
 Bseas$yeardec <- round(Bseas$yeardec, 3)
@@ -287,14 +289,43 @@ new.dataset <- new("MLZ_data",
   Len_matrix = t(lfq3$catch),
   length.units = "cm")
 
-new.dataset@Lc <- 23
+new.dataset@Lc <- stk$harvest$params$L50
 new.dataset <- calc_ML(new.dataset)
+
+# convert t_anchor to t0
+t_anchor2t0 <- function(par = NULL, Lrecr = NULL){
+  if(is.null(par) | is.null(Lrecr)){
+    stop("Error: must provide both 'par' and 'Lrecr'")
+  }
+  if(Lrecr > par$Linf){stop("Error: 'Lrecr' must be lower than 'par$Linf'")}
+
+  # add seasonalized pars if needed
+  seasonalized <- !is.null(par$C)
+  if(!seasonalized){par$ts <- 0; par$C <- 0}
+
+  t <- seq(0, 3, 0.01)
+  Lt <- VBGF(param = par, t = t)
+  trecr <- t[min(which((Lt - Lrecr)>0))]
+  # calc_trecr(par = par, Lrecr = Lrecr, Lt = tail(Lt,1), t = tail(t,1)) # same
+  t0 <- par$t_anchor - trecr
+  if(seasonalized){
+    ts <- (par$ts - trecr)%%1
+  } else {
+    ts <- 0
+  }
+  par_age <- par
+  par_age$t_anchor <- NULL
+  par_age$t0 <- t0
+  par_age$ts <- ts
+  
+  return(par_age)
+}  
 
 # new.dataset@MeanLength
 # new.dataset@ss
 new.dataset@vbLinf <- c(lfq3$par$Linf)
 new.dataset@vbK <- lfq3$par$K[1]
-new.dataset@vbt0 <- TropFishR::ta2t0(par = lfq3$par, L0 = 0, plot = FALSE)$t0
+new.dataset@vbt0 <- t_anchor2t0(par = lfq3$par, Lrecr = 0)$t0
 plot(new.dataset)
 
 model1 <- ML(new.dataset, ncp = 0, figure = FALSE)
@@ -329,85 +360,6 @@ legend("topleft", legend = c("True", "MLZ est."), col=1:2, pch=1, lty = 1)
 
 ```
 
-
-## Catch Curve and VPA
-
-**Catch Curve - constant fishing mortality (F)**
-
-```{r}
-lfq2 <- TropFishR::lfqCohort(lfq = lfq2, n.per.yr = 1, 
-  calc_dt = TRUE)
-lfq2 <- TropFishR::lfqRestructure(lfq2, MA = 5)
-
-op <- par(mar = c(4,4,2,1), ps=10)
-plot(lfq2, Fname = "rcounts",
-  ylim = c(0, max(lfq2$midLengths)), image.col=NA)
-PAL <- colorRampPalette(c("blue4", "cyan", "yellow", "red4"))
-COL <- adjustcolor(PAL(length(unique(lfq2$cohort))), 0.7)
-with(lfq2, image(x = dates, y = midLengths, z = t(cohort),
-  col = COL,
-  add=TRUE
-))
-par(op)
-
-
-df <- data.frame(
-  rel.age = c(lfq2$rel.age),
-  n = c(lfq2$catch),
-  cohort = c(lfq2$cohort),
-  dt = c(lfq2$dt)
-)
-df$date <- as.Date(c(matrix(lfq2$dates, nrow = length(lfq2$midLengths), 
-  ncol = length(lfq2$dates), byrow = TRUE)), origin = "1970-01-01")
-df$midLength <- c(matrix(lfq2$midLengths, nrow = length(lfq2$midLengths), 
-  ncol = length(lfq2$dates)))
-df$year <- format(df$date, format = "%Y")
-
-df$Ndt <- df$n/df$dt
-agg <- aggregate(Ndt ~ rel.age + cohort, data = df, FUN = sum, na.rm=TRUE)
-agg <- agg[-which(agg$Ndt == 0),]
-agg$cohort <- factor(agg$cohort)
-
-
-p <- ggplot(agg, aes(x = rel.age, y = log(Ndt))) + 
-  geom_point(pch=1) +
-  facet_wrap(~cohort, scales = "free") + 
-  geom_smooth(method = "lm", se=FALSE,
-    color="blue", lwd = 0.5, formula = y ~ x, 
-    data = subset(agg, rel.age >= 1.5 & rel.age <= 7))
-print(p)
-
-
-
-PAL <- colorRampPalette(c("blue4", "cyan", "yellow", "red4"))
-COL <- adjustcolor(PAL(length(levels(agg$cohort))), 0.7)
-plot(log(Ndt)~rel.age, agg, col = COL[agg$cohort], pch=16)
-legend("topright", legend = levels(agg$cohort), 
-  col = COL, pch=16, title = "Cohort", bty = "n")
-fit <- lm(log(Ndt)~rel.age+cohort, 
-  subset(agg, rel.age >=1.5 & rel.age <= 5))
-abline(fit)
-summary(fit)
-# anova(fit)
-Zest <- coef(fit)["rel.age"]
-Ztrue <- -1.7
-((1-exp(Zest)) - (1-exp(Ztrue))) / (1-exp(Ztrue)) * 100 # perc error
-
-# add prediction
-L <- fit$xlevels
-L$cohort <- factor(L$cohort, levels = levels(agg$cohort))
-L$rel.age <- seq(0,6)
-newdat <- expand.grid(L)
-newdat$Ndt <- predict(fit, newdata = newdat)
-for(i in levels(L$cohort)){
-  tmp <- subset(newdat, cohort == i)
-  if(nrow(tmp)>0){
-    lines(Ndt ~ rel.age, data = tmp, col=COL[tmp$cohort], lwd=1)
-  }
-}
-box()
-
-```
 
 
 **VPA - variable fishing mortality (F)**

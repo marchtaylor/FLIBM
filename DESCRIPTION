@@ -28,6 +28,6 @@ License: GPL-3
 URL: https://github.com/marchtaylor/FLIBM
 Encoding: UTF-8
 LazyData: FALSE
-RoxygenNote: 7.2.2
+RoxygenNote: 7.3.2
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr

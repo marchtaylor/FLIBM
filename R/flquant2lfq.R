@@ -42,19 +42,19 @@
 #' plot(lfq2, Fname = "rcounts", hist.sc = 0.5)
 #' }
 #'
-flquant2lfq <- function(flq){
+flquant2lfq <- function(flquant){
   # plot length-frequency
-  DIM <- dim(flq)
-  DIMNAMES <- dimnames(flq)
+  DIM <- dim(flquant)
+  DIMNAMES <- dimnames(flquant)
 
   lfq <- list()
   lfq$catch <- t(array(
-    aperm(flq, c(4,2,1,3,5,6)),
+    aperm(flquant, c(4,2,1,3,5,6)),
     dim = c(DIM[4]*DIM[2],DIM[1])
   ))
   lfq$catch <- replace(lfq$catch, is.na(lfq$catch), 0)
 
-  length.min <- as.numeric(DIMNAMES$length)
+  length.min <- as.numeric(DIMNAMES[[1]])
   length.span <- diff(length.min)
   midLengths <- c(length.min[-length(length.min)] + length.span/2,
    length.min[length(length.min)] + mean(length.span)/2)

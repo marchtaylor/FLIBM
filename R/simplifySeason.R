@@ -29,7 +29,8 @@ simplifySeason <- function(obj){
   stockSeas <- obj$stock.a
 
   # collapse season dimension and remove years with few to no catches
-  stockYr <- FLCore::simplify(stockSeas, dims = "season", spwn.season = ac(1))
+  # stockYr <- FLCore::simplify(stockSeas, dims = "season", spwn.season = ac(1))
+  stockYr <- FLCore::noseason(stockSeas, spwn.season = 1)
 
   # correct with true mortality
   harvest(stockYr) <- as(apply(harvest(stockSeas), c(1:3,5:6), sum, na.rm=TRUE), "FLQuant")

@@ -143,7 +143,7 @@ war.FLIBM <- function(
   qsdf <- qsdf[order(qsdf$yeardec),]
   qsdf$width[qsdf$N < minN] <- NaN
 
-  Ls <- as.numeric(dimnames(obj$stock.l@stock.n)$length)
+  Ls <- as.numeric(dimnames(obj$stock.l@stock.n)$age)
   maxL <- max(Ls)
 
   ARGS.x <- list()

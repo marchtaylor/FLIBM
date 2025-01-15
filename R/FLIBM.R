@@ -62,7 +62,7 @@ trim.FLIBM <- function(obj,
   season = dimnames(obj$stock.a)$season,
   area = dimnames(obj$stock.a)$area,
   iter = dimnames(obj$stock.a)$iter,
-  length = dimnames(obj$stock.l)$length
+  length = dimnames(obj$stock.l)$age
   ){
 
   obj$stock.l <- trim(obj$stock.l,
