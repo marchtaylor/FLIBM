@@ -72,7 +72,7 @@ create.FLIBM <- function(
   flq.l <- FLCore::FLQuant(
     NaN,
     dim = c(length(lengths), length(years), length(units), length(seasons), length(areas), length(iters)),
-    dimnames = list(length = lengths, year = years, unit = units, season = seasons, area = areas, iter = iters)
+    dimnames = list(age = lengths, year = years, unit = units, season = seasons, area = areas, iter = iters)
   )
 
 
@@ -194,10 +194,6 @@ create.FLIBM <- function(
   }
 
   # length-at-age -----------------------------------------------------------
-  length.a <- flq.a
-
-  # age-at-length
-  age.l <- flq.l
 
   # add FLStock objects
   obj$stock.l <- stock.l

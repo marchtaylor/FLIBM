@@ -9,6 +9,7 @@ Depends:
     R (>= 3.5.0),
     FLCore,
     FLash,
+    ggplot2,
     ggplotFL,
     data.table,
     parallel

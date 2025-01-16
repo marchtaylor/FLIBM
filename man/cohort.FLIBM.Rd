@@ -29,6 +29,13 @@ during the first year of simulation.}
 
 \item{seed}{seed value for random number reproducibility (Default: 1).
 When seed = NULL, a random seed is used during each FM run.}
+
+\item{purgeProb}{numeric Value between 0 and 1, indicating the frequency
+that obj$inds are purged of empty rows (passed to `remove.ids`).}
+
+\item{monitor}{logical Monitor progress (default FALSE).}
+
+\item{return.FLIBM}{(default FALSE)}
 }
 \value{
 a list

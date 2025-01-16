@@ -40,7 +40,7 @@ spinup.FLIBM <- function(
         res$trend <- 1
         for(y in res$year){
           obj.copy <- adv.FLIBM(obj = obj.copy,
-            year = DIMNAMES$year[1],
+            years = DIMNAMES$year[1],
             # unit = u, area = a, iter = i,
             monitor = FALSE
           )

@@ -14,6 +14,8 @@ window.FLIBM(
 \item{obj}{FLIBM object}
 
 \item{nyears}{numeric. Number of years to expand}
+
+\item{numeric}{Ending year for window}
 }
 \value{
 FLIBM object
@@ -24,8 +26,8 @@ expand FLIBM object years
 \examples{
 data(stk1)
 dimnames(stk1$stock.a)$year
-stk1 <- window.FLIBM(stk1, start = 2007, end = 2009)
-plot(stk1$stock.a@stock.n)
+stktmp <- window.FLIBM(stk1, start = 1995, end = 1998)
+plot(stktmp$stock.a@stock.n)
 
 
 }

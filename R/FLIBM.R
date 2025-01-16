@@ -4,6 +4,8 @@
 #'
 #' @param obj FLIBM object
 #' @param nyears numeric. Number of years to expand
+#' @param numeric Starting year for window
+#' @param numeric Ending year for window
 #'
 #' @return FLIBM object
 #' @export
@@ -11,8 +13,8 @@
 #' @examples
 #' data(stk1)
 #' dimnames(stk1$stock.a)$year
-#' stk1 <- window.FLIBM(stk1, start = 2007, end = 2009)
-#' plot(stk1$stock.a@stock.n)
+#' stktmp <- window.FLIBM(stk1, start = 1995, end = 1998)
+#' plot(stktmp$stock.a@stock.n)
 #'
 #'
 window.FLIBM <- function(obj,
@@ -39,11 +41,11 @@ window.FLIBM <- function(obj,
 #' @param obj FLIBM object
 #' @param year bla
 #' @param age bla
+#' @param length bla
 #' @param unit bla
 #' @param season bla
 #' @param area bla
 #' @param iter bla
-#' @param length bla
 #'
 #' @return FLIBM object
 #' @export
@@ -51,24 +53,26 @@ window.FLIBM <- function(obj,
 #' @examples
 #' data(stk1)
 #' dimnames(stk1$stock.a)$year
-#' stk1 <- trim.FLIBM(stk1, year = 1980:1985)
-#' dimnames(stk1$stock.a)$year
+#' stktmp <- trim.FLIBM(stk1, year = ac(1980:1985))
+#' dimnames(stktmp$stock.a)$year
+#' dimnames(stktmp$length.a)
+#' dimnames(stktmp$age.l)
 #'
 #'
 trim.FLIBM <- function(obj,
   year = dimnames(obj$stock.a)$year,
   age = dimnames(obj$stock.a)$age,
+  length = dimnames(obj$stock.l)$age,
   unit = dimnames(obj$stock.a)$unit,
   season = dimnames(obj$stock.a)$season,
   area = dimnames(obj$stock.a)$area,
-  iter = dimnames(obj$stock.a)$iter,
-  length = dimnames(obj$stock.l)$age
+  iter = dimnames(obj$stock.a)$iter
   ){
 
   obj$stock.l <- trim(obj$stock.l,
-    year = year, length = length, unit = unit, season = season, area = area, iter = iter)
+    year = year, age = length, unit = unit, season = season, area = area, iter = iter)
   obj$age.l <- trim(obj$age.l,
-    year = year, length = length, unit = unit, season = season, area = area, iter = iter)
+    year = year, age = length, unit = unit, season = season, area = area, iter = iter)
 
   obj$stock.a <- trim(obj$stock.a,
     year = year, age = age, unit = unit, season = season, area = area, iter = iter)

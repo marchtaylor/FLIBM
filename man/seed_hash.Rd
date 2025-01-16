@@ -16,6 +16,6 @@ text
 print seed
 }
 \examples{
-cat(seed_hash)
+cat(seed_hash())
 
 }

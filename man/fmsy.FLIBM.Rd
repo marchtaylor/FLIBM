@@ -9,7 +9,7 @@ fmsy.FLIBM(
   FMs = seq(0, 1, 0.1),
   years = dimnames(obj$stock.a)$year,
   yearsCompare = dimnames(obj$stock.a)$year,
-  parallel = TRUE,
+  parallel = FALSE,
   no_cores = detectCores() - 1,
   clusterType = "PSOCK",
   outfile = "output.txt",
@@ -57,7 +57,7 @@ resdf <- fmsy.FLIBM(stkMed, years = ac(2000:2009),
   yearsCompare = ac(2005:2009), no_cores = 3,
   FMs = seq(0,1,length.out = 6),
   cleanup = TRUE,
-  parallel = TRUE
+  parallel = FALSE
 )
 calcRefpts(resdf, ypr = FALSE, spar=0.15)
 }

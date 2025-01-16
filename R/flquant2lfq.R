@@ -1,6 +1,6 @@
 #' Convert FLIBM to lfq object
 #'
-#' @param obj FLIBM object
+#' @param flquant FLQuant object (e.g. `obj$stock.l@catch.n`)
 #'
 #' @return lfq class (\code{\link[TropFishR]{plot.lfq}}) object
 #' @export

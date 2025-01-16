@@ -18,6 +18,8 @@
 #'   which will records the progress of the permutation completions.
 #' @param seed seed value for random number reproducibility (Default: 1).
 #'   When seed = NULL, a random seed is used during each FM run.
+#' @param purgeProb numeric Value between 0 and 1, indicating the frequency
+#'  that obj$inds are purged of empty rows (passed to `remove.ids`).
 #'
 #' @return data.frame
 #' @export

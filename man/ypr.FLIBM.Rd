@@ -30,6 +30,9 @@ be applied.}
 \item{years}{character vector. Years to use in simulation
 (from \code{ dimnames(obj$stock.a@stock.n)} )}
 
+\item{purgeProb}{numeric Value between 0 and 1, indicating the frequency
+that obj$inds are purged of empty rows (passed to `remove.ids`).}
+
 \item{parallel}{logical. Simulations run in parallel.}
 
 \item{no_cores}{numeric value. Number of cores to use when

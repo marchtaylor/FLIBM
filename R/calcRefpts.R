@@ -9,6 +9,10 @@
 #' @param mar bla
 #' @param mgp bla
 #' @param ps bla
+#' @param Flab character Label used for y-axis. If `ypr = TRUE`, `Flab = "Fmax"`,
+#'  else `Flab = "Fmsy"`
+#' @param SPRlab character Label used for y-axis (default `SPRlab = "SPR"`)
+#' @param plot logical Should plot be drawn (default `plot = TRUE`)
 #'
 #' @return list containing results and (optional) plot
 #' @export

@@ -32,6 +32,13 @@ calcRefpts(
 
 \item{xlab}{bla}
 
+\item{Flab}{character Label used for y-axis. If `ypr = TRUE`, `Flab = "Fmax"`,
+else `Flab = "Fmsy"`}
+
+\item{SPRlab}{character Label used for y-axis (default `SPRlab = "SPR"`)}
+
+\item{plot}{logical Should plot be drawn (default `plot = TRUE`)}
+
 \item{mar}{bla}
 
 \item{mgp}{bla}

@@ -47,7 +47,6 @@ The FLIBM imports the package `FLCore` and recommends `ggplotFL` for use of summ
 library(FLIBM)
 library(FLCore)
 library(ggplotFL)
-library(data.table)
 set.seed(42) # for reproducibility
 ```
 

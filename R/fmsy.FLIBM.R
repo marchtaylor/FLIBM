@@ -38,7 +38,7 @@ fmsy.FLIBM <- function(
   FMs = seq(0,1,0.1),
   years = dimnames(obj$stock.a)$year,
   yearsCompare = dimnames(obj$stock.a)$year,
-  parallel = TRUE,
+  parallel = FALSE,
   no_cores = detectCores() - 1,
   clusterType = "PSOCK",
   outfile = "output.txt",
@@ -66,7 +66,6 @@ fmsy.FLIBM <- function(
       sink()
     }
 
-    library(data.table)
     set.seed(seed[x])
 
     # make copy

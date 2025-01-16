@@ -71,7 +71,7 @@
 #' stkMed <- spinup.FLIBM(obj = stkMed, nyearsmax = 30, nyearsslope = 5)
 #'
 #' # Advance first 20 years
-#' stkMed <- adv.FLIBM(obj = stkMed, year = ac(1980:1999))
+#' stkMed <- adv.FLIBM(obj = stkMed, years = ac(1980:1999))
 #'
 #' # plot stock numbers
 #' plot(stkMed$stock.a@stock.n[,ac(1980:1999)])

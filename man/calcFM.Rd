@@ -76,28 +76,6 @@ apply(stk2$stock.a@catch.n * stk2$stock.a@catch.wt, 2, sum, na.rm=TRUE)
 apply(harvest(stk2$stock.a),1:2, sum, na.rm=TRUE)
 fbar(simplifySeason(stk2))
 
-
-
-### OTHER OPTION WITH GA  - not cxurrently used ###
-
-system.time(res <- calcFM(obj = stk, Ctarget = 1200, year = "2005",
-  seed = 1, popSize = 10, maxiter = 20, abstol = 5))
-
-summary(res)
-
-
-# check
-set.seed(1)
-stk2 <- stk
-stk2$harvest$params$FM <- c(summary(res)$sol)
-stk2 <- adv.FLIBM(obj = stk2, year = "2005")
-
-# total catches
-apply(stk2$stock.a@catch.n * stk2$stock.a@catch.wt, 2, sum, na.rm=TRUE)
-
-# fishing mortality
-apply(harvest(stk2$stock.a),1:2, sum, na.rm=TRUE)
-fbar(simplifySeason(stk2))
 }
 
 }

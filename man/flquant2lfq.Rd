@@ -7,7 +7,7 @@
 flquant2lfq(flquant)
 }
 \arguments{
-\item{obj}{FLIBM object}
+\item{flquant}{FLQuant object (e.g. `obj$stock.l@catch.n`)}
 }
 \value{
 lfq class (\code{\link[TropFishR]{plot.lfq}}) object

@@ -57,7 +57,7 @@ plot(yrs, FMs)
 # Advance
 for(yr in seq(yrs)){
   stk1$harvest$params$FM <- FMs[yr]
-  stk1 <- adv.FLIBM(obj = stk1, year = ac(yrs[yr]))
+  stk1 <- adv.FLIBM(obj = stk1, years = ac(yrs[yr]))
 }
 
 # plot stock numbers
@@ -75,6 +75,7 @@ stk1$age.l <- trim(stk1$age.l, year = 1980:1999)
 
 # plot stock numbers
 plot(stk1$stock.a@stock.n)
+
 
 # plot yearly object
 stkYr <- simplifySeason(stk1)

@@ -1,6 +1,7 @@
 
 #' Simulate a single cohort
 #' @param obj FLIBM object.
+#'
 #' @param ssbfec numeric value. Single value describing constant spawning stock
 #'   biomass (or fecundity), used in determining recruitment with \code{obj$rec}
 #'   during the first year of simulation.
@@ -10,6 +11,10 @@
 #' @param seed seed value for random number reproducibility (Default: 1).
 #'   When seed = NULL, a random seed is used during each FM run.
 #'
+#' @param purgeProb numeric Value between 0 and 1, indicating the frequency
+#'  that obj$inds are purged of empty rows (passed to `remove.ids`).
+#' @param monitor logical Monitor progress (default FALSE).
+#' @param return.FLIBM (default FALSE)
 #'
 #' @return a list
 #' @export

@@ -8,11 +8,11 @@ trim.FLIBM(
   obj,
   year = dimnames(obj$stock.a)$year,
   age = dimnames(obj$stock.a)$age,
+  length = dimnames(obj$stock.l)$age,
   unit = dimnames(obj$stock.a)$unit,
   season = dimnames(obj$stock.a)$season,
   area = dimnames(obj$stock.a)$area,
-  iter = dimnames(obj$stock.a)$iter,
-  length = dimnames(obj$stock.l)$age
+  iter = dimnames(obj$stock.a)$iter
 )
 }
 \arguments{
@@ -22,6 +22,8 @@ trim.FLIBM(
 
 \item{age}{bla}
 
+\item{length}{bla}
+
 \item{unit}{bla}
 
 \item{season}{bla}
@@ -29,8 +31,6 @@ trim.FLIBM(
 \item{area}{bla}
 
 \item{iter}{bla}
-
-\item{length}{bla}
 }
 \value{
 FLIBM object
@@ -41,8 +41,10 @@ trim FLIBM dimensions
 \examples{
 data(stk1)
 dimnames(stk1$stock.a)$year
-stk1 <- trim.FLIBM(stk1, year = 1980:1985)
-dimnames(stk1$stock.a)$year
+stktmp <- trim.FLIBM(stk1, year = ac(1980:1985))
+dimnames(stktmp$stock.a)$year
+dimnames(stktmp$length.a)
+dimnames(stktmp$age.l)
 
 
 }
