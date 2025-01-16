@@ -20,7 +20,7 @@ installation.
 Installation via `devtools::install_github` may fail with warnings. Another option is to try a downloading the most recent release, and installing manually:
 
 ```
-myurl <- "https://github.com/marchtaylor/FLIBM/archive/v0.3.3.tar.gz"
+myurl <- "https://github.com/marchtaylor/FLIBM/archive/v0.4.0.tar.gz"
 z <- tempfile()
 download.file(myurl, z, mode="wb")
 install.packages(z, INSTALL_opts=c("--no-multiarch"))
