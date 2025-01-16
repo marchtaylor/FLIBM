@@ -57,7 +57,7 @@ resdf <- fmsy.FLIBM(stkMed, years = ac(2000:2009),
   yearsCompare = ac(2005:2009), no_cores = 3,
   FMs = seq(0,1,length.out = 6),
   cleanup = TRUE,
-  parallel = FALSE
+  parallel = TRUE
 )
 calcRefpts(resdf, ypr = FALSE, spar=0.15)
 }

@@ -3,7 +3,7 @@
 \docType{data}
 \name{stkMed}
 \alias{stkMed}
-\title{The stkMed dataset.}
+\title{stkMed dataset}
 \format{
 FLIBM class object
 }

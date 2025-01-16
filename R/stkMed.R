@@ -1,7 +1,6 @@
 #' @name stkMed
 #'
-#' @title The stkMed dataset.
-#'
+#' @title stkMed dataset
 #'
 #' @description The \code{stkMed} data generated with the with FLIBM.
 #' The stock has a seasonal recruitment pattern, with interannual
