@@ -47,7 +47,7 @@ stk <- stk1 # rename
 plot(stk$stock.a@stock.n) # plot stock numbers
 ```
 
-# Age-based (a4a, XSA)
+# Age-based (a4a)
 
 **Collapse to yearly FLStock** 
 
