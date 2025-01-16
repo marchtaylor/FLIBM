@@ -8,6 +8,6 @@ output.txt
 % vignettes
 vignettes/tex
 vignettes/cache
-# doc
 Meta
-# doc
+/doc/
+/Meta/

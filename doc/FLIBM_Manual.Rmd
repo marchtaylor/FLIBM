@@ -158,8 +158,10 @@ df$x[df$x == 0] <- NA
 
 p <- ggplot(data = df, aes(x = date, y = x)) +
   geom_line() +
-  scale_y_continuous(limits = c(0,NA))
-  print(p)
+  scale_y_continuous(limits = c(0,NA)) +
+  labs(y = "SSB")
+
+print(p)
 ```
 
 ```{r, stkN}
@@ -212,6 +214,7 @@ length at maturity
 ```{r, Lmat}
 df <- as.data.frame(apply(stk$stock.l@mat[,"2003"], 
   1, mean, na.rm=TRUE))
+names(df)[1] <- "length"
 df <- na.omit(df)
 df$length <- df$length+0.5 # bin mid-length
 fit <- glm(data ~ length, data = df, 
@@ -250,7 +253,8 @@ df$lengthProd <- df$length * df$n
 agg1 <- aggregate(cbind(lengthProd, n) ~ year, data = df, 
   FUN = sum, na.rm=TRUE)
 agg1$meanLength <- agg1$lengthProd / agg1$n
-plot(meanLength ~ year, agg1, t="b", ylim=range(df$length))
+plot(meanLength ~ year, agg1, t="b", ylim=range(df$length), 
+  ylab = "mean length in catch (mm)")
 abline(h = L50, lty=2, col=8)
 ```
 
